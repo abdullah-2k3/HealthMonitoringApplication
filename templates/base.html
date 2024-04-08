@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/styles.css">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block additional_css %}
+    <!-- Favicons -->
+    <link href="./static/assets/img/favicon.png" rel="icon">
+    <link href="./static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="./static/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+    <link href="./static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="./static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="./static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="./static/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="./static/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="./static/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="./static/assets/css/style.css" rel="stylesheet">
+
+    <!-- =======================================================
+  * Template Name: Medilab
+  * Template URL: https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/
+  * Updated: Mar 17 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+    {% endblock %}
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="logo">Healthline Pro</div>
+        <div class="logout-button"><a href="/logout">Logout</a></div>
+    </div>
+
+    <div class="my_header">
+        <h2>{%block header%}{% endblock %}</h2>
+    </div>
+
+    {% block sidebar %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+
+</html>

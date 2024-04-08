@@ -1,0 +1,145 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Times New Roman';
+  background: #eeeeee;
+  color: #150631; /* white font color */
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000; 
+
+}
+
+.logo {
+  font-size: 20px;
+}
+
+.logout-button {
+  font-size: 16px;
+}
+
+.logout-button a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 10px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+}
+
+.logout-button a:hover {
+  background-color: #fff;
+  color: #202040;
+}
+
+.my_header {
+  position: fixed;
+  top: 80px;
+  width: 100%;
+  padding: 5px 15px;
+  z-index: 1000; 
+  background-color: #aaa;
+  color: #130e3b;
+  margin-left: 200px;
+}
+
+
+
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  margin-top: 60px;
+  background-color: #202022;
+  padding: 20px;
+  color: #fff;
+}
+
+
+.sidebar-image {
+  width: 100px; 
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+  
+.sidebar-label {
+    margin-top: 10px; /* Adjust the margin as needed */
+    font-size: 22px; /* Adjust font size as needed */
+	margin-left: 30px;
+	margin-bottom: 10px;
+    color: white; /* Adjust color as needed */
+  }
+
+.text {
+  text-align: center;
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+
+button {
+  display: block;
+  width: 100%;
+  padding: 15px 0px;
+  margin-bottom: 10px;
+  background-color: #202020;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #111111;
+}
+
+.main-content {
+  margin-left: 230px;
+  margin-right: 20px;
+  margin-top: 150px;
+}
+
+table td, table th {
+  border: 1px solid lightgray;
+  padding: 5px;
+  text-align: center;
+}
+
+table th {
+  background-color: lightgray;
+  font-weight: bold;
+}
+
+table {
+  border-collapse: collapse;
+  align-self: center;
+}
+
+
+.card-pair {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Adjust as needed */
+}
+
+.card {
+  flex-basis: calc(50% - 10px); /* Adjust as needed */
+}
+
+.login {
+  margin-top: 200px;
+  margin-right: 300px;
+}

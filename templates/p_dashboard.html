@@ -1,0 +1,77 @@
+{% extends 'base_patient.html' %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block header %}
+    Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <h2>Your health data summary goes here...</h2>
+
+  <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+      <div id="data-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <!-- Data cards will be dynamically populated here -->
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-4">
+    <canvas id="health-chart"></canvas> <!-- Chart will be rendered here -->
+  </div>
+  
+  <section id="counts" class="counts">
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-lg-3 col-md-6">
+          <div class="count-box">
+            <i class="fas fa-user-md"></i>
+            <span data-purecounter-start="0" data-purecounter-end="85" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Doctors</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
+          <div class="count-box">
+            <i class="far fa-hospital"></i>
+            <span data-purecounter-start="0" data-purecounter-end="18" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Departments</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+          <div class="count-box">
+            <i class="fas fa-flask"></i>
+            <span data-purecounter-start="0" data-purecounter-end="12" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Research Labs</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+          <div class="count-box">
+            <i class="fas fa-award"></i>
+            <span data-purecounter-start="0" data-purecounter-end="150" data-purecounter-duration="1" class="purecounter"></span>
+            <p>Awards</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section><!-- End Counts Section -->
+
+
+  <h2>Dashboard Content</h2>
+  <p>This is your dashboard content.</p>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+{% endblock %}

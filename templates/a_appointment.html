@@ -1,0 +1,38 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}
+Appontment
+{% endblock %}
+
+
+{% block header %}
+Appointment
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+
+    <section class="bg-dark text-light p-4 rounded shadow mb-4">
+        <h2 class="mb-3">Appointment Records</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    {% for column in columns %}
+                    <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    {% for value in row %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+</div>
+{% endblock %}

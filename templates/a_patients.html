@@ -1,0 +1,149 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}
+Patients
+{% endblock %}
+
+
+{% block header %}
+Manage Patients
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+
+    <section class="bg-dark text-light p-4 rounded shadow mb-4">
+        <h2>Database Operations</h2>
+
+        <p style="padding: 10px">The operations will be performed in the database. If the user is not registered or does
+            not exist in the
+            database, 'Add' operation will register the user and save all the details in the database.</p>
+
+        <form id="actionForm" action="/handle_patient_action" method="post"
+            style="margin-bottom: 30px;margin-top: 30px;">
+            <div class="row">
+                <input type="hidden" id="action" name="action" value="">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="password">
+                            Password:
+                            <input type="checkbox" onclick="showPassword()">
+                            <span>Show</span>
+                        </label>
+                        <input type="password" id="password" name="password" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="patient_id">User ID:</label>
+                        <input type="text" id="patient_id" name="patient_id" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="patient_name">Patient Name:</label>
+                        <input type="text" id="patient_name" name="patient_name" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" name="age" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" class="form-control">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="text" id="email" name="email" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type id="contact" name="contact" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="health">Health Status:</label>
+                        <input type="text" id="health" name="health" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary mr-3" onclick="setAction('add')">Add Patient</button>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success mr-3" onclick="setAction('update')">Update Patient</button>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger mr-3" onclick="setAction('delete')">Delete Patient</button>
+            </div>
+        </form>
+
+    </section>
+
+
+    <section class="bg-dark text-light p-4 rounded shadow mb-4">
+        <h2 class="mb-3">Patient Records</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    {% for column in columns %}
+                    <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    {% for value in row %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <script src="./static/script.js"></script>
+
+
+</div>
+{% endblock %}

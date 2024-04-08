@@ -1,0 +1,43 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}
+Users
+{% endblock %}
+
+
+{% block header %}
+View All Users
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <section class="bg-dark text-light p-4 rounded shadow mb-4">
+        <h2 class="mb-3">User Records</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    {% for column in columns %}
+                    <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    {% for value in row %}
+                    <td>
+                        {% if loop.index0 == 2 %}
+                        <input type="password" value="{{ value }}">
+                        {% else %}
+                        {{ value }}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+{% endblock %}
