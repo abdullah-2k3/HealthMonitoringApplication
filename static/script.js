@@ -239,3 +239,24 @@ function updateLocations() {
       .catch((error) => console.error("Error fetching locations:", error));
   }
 }
+
+function cancelAppointment() {
+  const popup = document.getElementById("confirmation-popup");
+  popup.style.display = "block";
+
+  const confirmButton = document.getElementById("confirm-button");
+  confirmButton.addEventListener("click", function () {
+    const form = document.getElementById("cancel-appointment-form");
+    form.submit();
+
+    // Hide the pop-up
+    popup.style.display = "none";
+  });
+
+  // Handle the cancel button click
+  const cancelButton = document.getElementById("cancel-button");
+  cancelButton.addEventListener("click", function () {
+    // Hide the pop-up
+    popup.style.display = "none";
+  });
+}

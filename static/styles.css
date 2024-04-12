@@ -1,9 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Times New Roman';
-  background: #eeeeee;
-  color: #150631; /* white font color */
+  background: #ffffff ;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #150631;
 }
 
 .topbar {
@@ -21,8 +21,21 @@ body {
 
 }
 
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.topbar-image {
+  margin-right: 10px; /* Adjust margin as needed */
+}
+
+
+
+
 .logo {
   font-size: 20px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .logout-button {
@@ -46,13 +59,13 @@ body {
   position: fixed;
   top: 80px;
   width: 100%;
-  padding: 5px 15px;
+  padding: 10px 15px;
   z-index: 1000; 
   background-color: #aaa;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #130e3b;
   margin-left: 200px;
 }
-
 
 
 
@@ -68,6 +81,9 @@ body {
   color: #fff;
 }
 
+.topbar-image {
+  width: 28px; 
+}
 
 .sidebar-image {
   width: 100px; 
@@ -110,6 +126,7 @@ button:hover {
   margin-left: 230px;
   margin-right: 20px;
   margin-top: 150px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 table td, table th {
@@ -143,3 +160,13 @@ table {
   margin-top: 200px;
   margin-right: 300px;
 }
+
+.fixed-width {
+  width: 300px; /* adjust the width as needed */
+}
+
+.btn-width {
+  width: 90px; /* adjust the width as needed */
+}
+
+

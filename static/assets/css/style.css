@@ -20,14 +20,6 @@ a:hover {
   text-decoration: none;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Raleway", sans-serif;
-}
 
 /*--------------------------------------------------------------
 # Preloader
@@ -540,24 +532,25 @@ h6 {
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 60px 0;
+  padding: 40px 0;
   overflow: hidden;
+  border-radius:10px;
 }
 
 .section-bg {
-  background-color: #f1f7fd;
+  background-color: #fafafa;  
 }
 
 .section-title {
   text-align: center;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
 }
 
 .section-title h2 {
   font-size: 32px;
   font-weight: bold;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
   position: relative;
   color: #2c4964;
 }
@@ -871,7 +864,7 @@ section {
 # Counts
 --------------------------------------------------------------*/
 .counts {
-  background: #f1f7fd;
+  background: #fafafa;
   padding: 70px 0 60px;
 }
 
@@ -880,7 +873,7 @@ section {
   width: 100%;
   position: relative;
   text-align: center;
-  background: #fff;
+  background: #ececef;
 }
 
 .counts .count-box i {
@@ -918,7 +911,7 @@ section {
 --------------------------------------------------------------*/
 .services .icon-box {
   text-align: center;
-  border: 1px solid #d5e1ed;
+  border: 1px solid #8996a4;
   padding: 80px 20px;
   transition: all ease-in-out 0.3s;
 }
@@ -971,31 +964,11 @@ section {
 
 .services .icon-box p {
   line-height: 24px;
-  font-size: 14px;
+  font-size: 18px;
   margin-bottom: 0;
 }
 
-.services .icon-box:hover {
-  background: #1977cc;
-  border-color: #1977cc;
-}
 
-.services .icon-box:hover .icon {
-  background: #fff;
-}
-
-.services .icon-box:hover .icon i {
-  color: #1977cc;
-}
-
-.services .icon-box:hover .icon::before {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.services .icon-box:hover h4 a,
-.services .icon-box:hover p {
-  color: #fff;
-}
 
 /*--------------------------------------------------------------
 # Appointments
@@ -1160,7 +1133,7 @@ section {
 # Doctors
 --------------------------------------------------------------*/
 .doctors {
-  background: #fff;
+  background: #fafafa;
 }
 
 .doctors .member {

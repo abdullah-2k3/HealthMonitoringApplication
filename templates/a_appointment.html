@@ -6,13 +6,23 @@ Appontment
 
 
 {% block header %}
-Appointment
+Appointments
 {% endblock %}
 
 {% block content %}
 <div class="main-content">
 
-    <section class="bg-dark text-light p-4 rounded shadow mb-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <section class="section-bg p-4 rounded shadow mb-4">
         <h2 class="mb-3">Appointment Records</h2>
         <table class="table">
             <thead class="thead-dark">
@@ -33,6 +43,76 @@ Appointment
             </tbody>
         </table>
     </section>
+
+    <section class="section-bg p-4 rounded shadow mb-5">
+
+        <h3>Edit Options</h3>
+        <form id="actionForm" action="/handle_appointment_update" method="post">
+            <div class="row">
+                <input type="hidden" id="action" name="action" value="update">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" id="id" name="id" class="form-control" placeholder="AppointmentID *"
+                            required>
+                    </div>
+                    <span class="required"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" id="patient" name="patient" class="form-control" placeholder="PatientID">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" id="doctor" name="doctor" class="form-control" placeholder="DoctorID">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" id="location" name="location" class="form-control" placeholder="Location">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="date" id="date" name="date" class="form-control" placeholder="Date">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="time" id="time" name="time" class="form-control" placeholder="Time">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" id="details" name="details" class="form-control" placeholder="Details">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" id="fee" name="fee" class="form-control" placeholder="AppointmentFee">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <select id="status" name="status" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="canceled">Canceled</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-dark mr-3">Update Appointment</button>
+            </div>
+        </form>
+    </section>
+
 
 </div>
 {% endblock %}

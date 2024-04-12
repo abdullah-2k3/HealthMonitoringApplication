@@ -1,74 +1,139 @@
 {% extends 'base_patient.html' %}
 
 {% block title %}
-    Dashboard
+Dashboard
 {% endblock %}
 
 {% block header %}
-    Dashboard
+Dashboard
 {% endblock %}
 
 {% block content %}
 <div class="main-content">
-  <h2>Your health data summary goes here...</h2>
 
-  <div class="album py-5 bg-body-tertiary">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <section id="counts" class="counts section-bg!">
     <div class="container">
-      <div id="data-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <!-- Data cards will be dynamically populated here -->
+
+      <div class="section-title">
+        <h2>Health Summary </h2>
       </div>
-    </div>
-  </div>
 
-  <div class="container mt-4">
-    <canvas id="health-chart"></canvas> <!-- Chart will be rendered here -->
-  </div>
-  
-  <section id="counts" class="counts">
+      <h3 class="ml-5">Recorded: {{(data[0][2])}}</h3>
+      <div class="row mt-5 ">
+
+        <div class="col-lg-3 col-md-6 mr-5 ml-5 ">
+          <div class="count-box">
+            <span>{{data[0][5]}}</span>
+            <p>Height (inches)</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mr-5 ml-5 ">
+          <div class="count-box">
+            <span>{{data[0][4]}}</span>
+            <p>Weight (lbs)</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mr-5 ml-5 ">
+          <div class="count-box">
+            <span>{{data[0][3]}}</span>
+            <p>Blood Pressure</p>
+          </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
+          <div class="count-box">
+            <span>{{data[0][4]}}</span>
+            <p>Heart Rate</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
+          <div class="count-box">
+            <span>{{data[0][13]}}</span>
+            <p>Sleep Time(Hrs)</p>
+          </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
+          <div class="count-box">
+            <span>{{data[0][5]}}</span>
+            <p>Body Temprature (F)</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <section id="services" class="services mt-5">
     <div class="container">
+
+      <div class="section-title">
+        <h2>Health Reports</h2>
+
+      </div>
 
       <div class="row">
-
-        <div class="col-lg-3 col-md-6">
-          <div class="count-box">
-            <i class="fas fa-user-md"></i>
-            <span data-purecounter-start="0" data-purecounter-end="85" data-purecounter-duration="1" class="purecounter"></span>
-            <p>Doctors</p>
+        <div class="col-lg-4 mt-3">
+          <div class="icon-box">
+            <div class="icon"><i class="fas fa-heartbeat"></i></div>
+            <h4>Symptoms</h4>
+            <p>{{data[0][8]}}</p>
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
-          <div class="count-box">
-            <i class="far fa-hospital"></i>
-            <span data-purecounter-start="0" data-purecounter-end="18" data-purecounter-duration="1" class="purecounter"></span>
-            <p>Departments</p>
+        <div class="col-lg-4 mt-3">
+          <div class="icon-box">
+            <div class="icon"><i class="fas fa-pills"></i></div>
+            <h4>Diagnosis</h4>
+            <p>{{data[0][9]}}</p>
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-          <div class="count-box">
-            <i class="fas fa-flask"></i>
-            <span data-purecounter-start="0" data-purecounter-end="12" data-purecounter-duration="1" class="purecounter"></span>
-            <p>Research Labs</p>
+        <div class="col-lg-4 mt-3">
+          <div class="icon-box">
+            <div class="icon"><i class="fas fa-hospital-user"></i></div>
+            <h4>Treatment</h4>
+            <p>{{data[0][10]}}</p>
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-          <div class="count-box">
-            <i class="fas fa-award"></i>
-            <span data-purecounter-start="0" data-purecounter-end="150" data-purecounter-duration="1" class="purecounter"></span>
-            <p>Awards</p>
+        <div class="col-lg-4 mt-3">
+          <div class="icon-box">
+            <div class="icon"><i class="fas fa-dna"></i></div>
+            <h4>Medication</h4>
+            <p>{{data[0][11]}}</p>
           </div>
         </div>
 
+        <div class="col-lg-4 mt-3">
+          <div class="icon-box">
+            <div class="icon"><i class="fas fa-hospital-user"></i></div>
+            <h4>Notes</h4>
+            <p>{{data[0][12]}}</p>
+          </div>
+        </div>
       </div>
 
     </div>
-  </section><!-- End Counts Section -->
+  </section>
 
-
-  <h2>Dashboard Content</h2>
-  <p>This is your dashboard content.</p>
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>

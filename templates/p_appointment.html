@@ -1,18 +1,18 @@
 {% extends 'base_patient.html' %}
 
 {% block title %}
-Appontment
+Request Appontment
 {% endblock %}
 
 
 {% block header %}
-Appointment
+Request Appointment
 {% endblock %}
 
 {% block content %}
 <div class="main-content">
   <!-- ======= Appointment Section ======= -->
-  <section id="appointment" class="appointment bg-secondary text-light">
+  <section id="appointment" class="appointment section-bg">
     <div class="container">
 
       {% with messages = get_flashed_messages(with_categories=true) %}
@@ -26,66 +26,57 @@ Appointment
       {% endwith %}
 
       <div class="section-title">
-        <h2 class="text-dark">Make an Appointment</h2>
+        <h2 class="mb-3">Make an Appointment</h2>
         <p>Ready to schedule your appointment? Use the form below to select your preferred date and time, and we'll take
           care of the rest. We'll reach out to confirm your appointment shortly. Thank you for choosing us for your
           healthcare needs!</p>
       </div>
 
-      <form id="actionForm" action="/handle_appointment_action" method="post"
-        style="margin-bottom: 30px;margin-top: 30px;">
-        <input type="hidden" id="action" name="action" value="">
+      <form id="actionForm" action="/handle_appointment_booking" method="post">
+        <input type="hidden" id="action" name="action" value="add">
         <div class="row">
-          <div class="col-md-4 form-group mt-3">
-            <!-- Dropdown calendar for appointment date -->
-            <div class="input-group date" data-provide="datepicker">
-              <input type="date" name="date" class="form-control datepicker" id="date" placeholder="Appointment Date"
-                data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-              <div class="input-group-addon">
-                <span class="glyphicon glyphicon-th"></span>
-              </div>
-            </div>
-            <div class="validate"></div>
+          <div class="col-md-4 form-group">
+            <label for="date">Appointment Date: *</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+            <span class="required"></span>
           </div>
-          <div class="col-md-4 form-group mt-3">
-            <select name="doctor" id="doctor" class="form-select">
+          <div class="col-md-4 form-group">
+            <label for="doctor">Doctor: *</label>
+            <select name="doctor" id="doctor" class="form-select" required>
               <option value="">Select Doctor</option>
               {% for doctor in data %}
               <option value="{{ doctor[1] }}">{{ doctor[1] }}</option>
               {% endfor %}
             </select>
-            <div class="validate"></div>
+            <span class="required"></span>
           </div>
-
-          <div class="col-md-4 form-group mt-3">
-            <select name="location" id="location" class="form-select">
+          <div class="col-md-4 form-group">
+            <label for="location">Location: *</label>
+            <select name="location" id="location" class="form-select" required>
               <option value="">Select Location</option>
               {% for row in data %}
               <option value="{{ row[4] }}">{{ row[4] }}</option>
               {% endfor %}
             </select>
-            <div class="validate"></div>
+            <span class="required"></span>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4 form-group mt-3">
-            <!-- Input field for time -->
-            <input type="time" name="time" class="form-control" id="time" placeholder="Appointment Time"
-              data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-            <div class="validate"></div>
+          <div class="col-md-4 form-group">
+            <label for="time">Appointment Time: *</label>
+            <input type="time" class="form-control" id="time" name="time" required>
+            <span class="required"></span>
           </div>
         </div>
         <div class="form-group mt-3">
-          <textarea class="form-control" name="details" rows="5" placeholder="Details (Optional)"></textarea>
-          <div class="validate"></div>
+          <textarea class="form-control" name="details" rows="2" placeholder="Details (Optional)"></textarea>
+          <span class="required"></span>
         </div>
         <br>
         <div class="text-center">
-          <button type="submit" class="btn btn-dark mr-3" onclick="setAction('add')">Request Appointment</button>
+          <button type="submit" class="btn btn-dark">Request Appointment</button>
         </div>
-
       </form>
-
     </div>
   </section><!-- End Appointment Section -->
   <script src="./static/script.js"></script>

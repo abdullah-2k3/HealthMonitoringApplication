@@ -38,12 +38,74 @@ def fetch_data_from_table(table_name):
     return table_data, columns
 
 
-def delete_row(table_name, row_id):
+import pyodbc
+
+
+def fetch_data_with_query(table_name, row_id, _=None):
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
     try:
-        delete_query = f"DELETE FROM {table_name} WHERE id = ?"
+        # Execute SQL query to fetch data from the specified table with the given row_id
+        if _ == None:
+            query = f"SELECT * FROM {table_name} WHERE id = ?"
+        else:
+            query = f"SELECT * FROM {table_name} WHERE {_} = ?"
+        cursor.execute(query, (row_id,))
+
+        # Fetch data
+        table_data = cursor.fetchall()
+
+        # Check if any rows were returned
+        if not table_data:
+            print(f"No row found with id {row_id}")
+            table_data = ()
+
+        columns = [column[0] for column in cursor.description]
+
+        return table_data, columns
+    except pyodbc.Error as e:
+        print(f"Error fetching data: {e}")
+        return None, None
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def get_doctor_patients(id):
+    conn = pyodbc.connect(conn_str)
+    cursor = conn.cursor()
+
+    try:
+        query = f"SELECT * FROM patients where id in (select patientid from appointments where doctorid = ?)"
+
+        cursor.execute(query, (id,))
+
+        table_data = cursor.fetchall()
+
+        if not table_data:
+            print(f"No row found with id {id}")
+            table_data = ()
+
+        columns = [column[0] for column in cursor.description]
+
+        return table_data, columns
+    except pyodbc.Error as e:
+        print(f"Error fetching data: {e}")
+        return None, None
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def delete_row(table_name, row_id, _=None):
+    conn = pyodbc.connect(conn_str)
+    cursor = conn.cursor()
+
+    try:
+        if _ == None:
+            _ = id
+        delete_query = f"DELETE FROM {table_name} WHERE {_} = ?"
         cursor.execute(delete_query, (row_id,))
         conn.commit()
         if cursor.rowcount == 0:
@@ -53,6 +115,7 @@ def delete_row(table_name, row_id):
     except pyodbc.Error as e:
         print(f"Error deleting row: {e}")
         flash("An error occurred while deleting the row", "error")
+
     finally:
         cursor.close()
         conn.close()
@@ -71,40 +134,42 @@ def add_row(table_name, row_data):
         cursor.execute(insert_query, tuple(values))
 
         conn.commit()
-        flash("Row added successfully", "success")
+        return True
     except pyodbc.Error as e:
         print(f"Error adding row: {e}")
         flash("An error occurred while adding the row", "error")
         flash(str(e))
+        return False
     finally:
         cursor.close()
         conn.close()
 
 
-def update_row(table_name, row_data):
+def update_row(table_name, row_data, row_id, _=None):
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
     try:
-        row_id = row_data.get("id", None)
         if row_id is None:
             raise ValueError("Row ID is missing.")
 
-        # Remove the row ID and None values from the dictionary
         row_data = {
             key: value
             for key, value in row_data.items()
-            if value is not None and key != "id"
+            if value is not None and value != ""
         }
+        columns = [key for key in row_data.keys()]
 
-        # If no non-None values are left after filtering, return without updating
         if not row_data:
-            flash("No non-None values provided for update.", "warning")
+            flash("No values provided for update.", "warning")
             return
 
         set_clause = ", ".join([f"{column} = ?" for column in row_data.keys()])
 
-        update_query = f"UPDATE {table_name} SET {set_clause} WHERE id = ?"
+        if _ is None:
+            update_query = f"UPDATE {table_name} SET {set_clause} WHERE id = ?"
+        else:
+            update_query = f"UPDATE {table_name} SET {set_clause} WHERE {_} = ?"
 
         values = list(row_data.values()) + [row_id]
 
@@ -114,13 +179,13 @@ def update_row(table_name, row_data):
         if cursor.rowcount == 0:
             flash("ID not found.", "error")
         else:
-            flash("Row updated successfully", "success")
+            flash(f"{columns} updated", "success")
     except pyodbc.Error as e:
-        print(f"Error updating row: {e}")
         flash("An error occurred while updating the row", "error")
+        flash(str(e), "warning")
     except ValueError as ve:
         print(f"ValueError: {ve}")
-        flash("Row ID is missing in the row_data dictionary.", "error")
+        flash("Row ID is missing.", "error")
     except pyodbc.ProgrammingError as pe:
         print(f"ProgrammingError: {pe}")
         flash("Row ID not found in the table.", "error")
@@ -169,14 +234,44 @@ def login():
 
 @app.route("/dashboard")
 def dashboard():
+
     if "username" in session and "role" in session:
         role = session["role"]
+
         if role == "patient":
-            return render_template("p_dashboard.html")
+            data, cols = fetch_data_with_query(
+                "patienthealth", session["id"], "patient_id"
+            )
+            if len(data) == 0:
+                data = (1, 2)
+            return render_template("p_dashboard.html", data=data)
+
         elif role == "doctor":
-            return render_template("d_dashboard.html")
+            patients, cols = get_doctor_patients(session["id"])
+            appointments, cols = fetch_data_with_query(
+                "appointments", session["id"], "doctorid"
+            )
+            doctor, col = fetch_data_with_query("doctors", session["id"])
+            locations = doctor[0][4].split()
+            data = {
+                "patients": len(patients),
+                "appointments": len(appointments),
+                "locations": len(locations),
+            }
+            return render_template("d_dashboard.html", data=data)
+
         elif role == "admin":
-            return render_template("a_dashboard.html")
+            doctors, col = fetch_data_from_table("doctors")
+            patients, col = fetch_data_from_table("patients")
+            appointments, col = fetch_data_from_table("appointments")
+
+            data = {
+                "doctors": len(doctors),
+                "patients": len(patients),
+                "appointments": len(appointments),
+            }
+
+            return render_template("a_dashboard.html", data=data)
     flash("Please login to access this page", "error")
     return redirect(url_for("login"))
 
@@ -187,61 +282,192 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/patient-data")
-def patient_data():
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Patients")
-
-    # Get column names from cursor description
-    columns = [column[0] for column in cursor.description]
-
-    # Fetch all rows
-    rows = cursor.fetchall()
-
-    # Convert rows to a list of dictionaries
-    data = []
-    for row in rows:
-        data.append(dict(zip(columns, row)))
-
-    # Return column headers and data as JSON
-    return jsonify(columns=columns, data=data)
-
-
 @app.route("/")
 def index():
     return render_template("login.html")
 
 
-@app.route("/register", methods=["POST", "GET"])
+@app.route("/register")
 def register():
-    if request.method == "POST":
-        user = request.form["nm"]
-        session["user"] = user
-        return redirect(url_for("user"))
-    else:
-        if "user" in session:
-            return redirect(url_for("user"))
+    return render_template("register.html")
 
-        return render_template("register.html")
+
+@app.route("/register_patient")
+def register_patient():
+    return render_template("register_patient.html")
+
+
+@app.route("/register_doctor")
+def register_doctor():
+    return render_template("register_doctor.html")
+
+
+@app.route("/handle_register_patient", methods=["POST"])
+def handle_register_patient():
+
+    username = request.form["username"]
+    email = request.form["email"]
+    password = request.form["password"]
+    contact = request.form["contact"]
+    name = request.form["name"]
+    gender = request.form["gender"]
+    age = request.form["age"]
+
+    user_data = {
+        "username": username,
+        "password": password,
+        "role": "patient",
+        "email": email,
+        "contact": contact,
+    }
+    id = 0
+    patient_data = {
+        "id": id,
+        "name": name,
+        "gender": gender,
+        "age": age,
+        "healthStatus": "Null",
+    }
+
+    if not add_row("users", user_data):
+        flash("Could not register", "error")
+        return redirect("/register")
+
+    id = get_id("users", "username", username)
+    patient_data["id"] = id
+    if not add_row("patients", patient_data):
+        flash("Could not register", "error")
+    else:
+        flash("You have been registered", "success")
+    return redirect("/register_patient")
+
+
+@app.route("/handle_register_doctor", methods=["POST"])
+def handle_register_doctor():
+
+    username = request.form["username"]
+    email = request.form["email"]
+    password = request.form["password"]
+    contact = request.form["contact"]
+    name = request.form["name"]
+    qualification = request.form["qualification"]
+    specialization = request.form["specialization"]
+    location = request.form["locations"]
+
+    user_data = {
+        "username": username,
+        "password": password,
+        "role": "doctor",
+        "email": email,
+        "contact": contact,
+    }
+    id = 0
+    doctor_data = {
+        "id": id,
+        "name": name,
+        "qualification": qualification,
+        "specialization": specialization,
+        "location": location,
+        "charges": 1500,
+    }
+
+    if not add_row("users", user_data):
+        flash("Could not register", "error")
+        return redirect("/register")
+
+    id = get_id("users", "username", username)
+    doctor_data["id"] = id
+    if not add_row("doctors", doctor_data):
+        flash("Could not register", "error")
+    else:
+        flash("You have been registered", "success")
+    return redirect("/register_doctor")
 
 
 @app.route("/profile")
 def profile():
     if "username" in session and "role" in session:
         role = session["role"]
+        data, col = fetch_data_with_query("users", session["id"])
         if role == "patient":
-            return render_template("p_profile.html")
+            patient_data, col = fetch_data_with_query("patients", session["id"])
+            if not patient_data:
+                patient_data = (1, 2, 3)
+            return render_template("p_profile.html", user=data, patient=patient_data)
         elif role == "doctor":
-            return render_template("d_profile.html")
+            doctor_data, col = fetch_data_with_query("doctors", session["id"])
+            return render_template("d_profile.html", user=data, doctor=doctor_data)
         elif role == "admin":
-            return render_template("a_profile.html")
+            return render_template("a_profile.html", user=data)
     flash("Please login to access this page", "error")
     return redirect(url_for("login"))
 
 
-@app.route("/viewdata")
-def viewdata():
-    return render_template("p_viewdata.html")
+@app.route("/update_admin_profile", methods=["POST"])
+def update_user_profile():
+
+    username = request.form.get("username")
+    password = request.form.get("password")
+    email = request.form.get("email")
+    contact = request.form.get("contact")
+    confirm_password = request.form.get("confirm-pass")
+
+    if password:
+        if password != confirm_password:
+            flash("Enter correct confirmation password to update", "warning")
+            return redirect("/profile")
+
+    id = session["id"]
+    data = {
+        "username": username,
+        "password": password,
+        "email": email,
+        "contact": contact,
+    }
+
+    update_row("users", data, id)
+
+    return redirect("/profile")
+
+
+@app.route("/update_doctor_profile", methods=["POST"])
+def update_doctor_profile():
+
+    update_user_profile()
+
+    name = request.form["name"]
+    qualification = request.form["qualification"]
+    specialization = request.form["specialization"]
+    location = request.form["locations"]
+
+    data = {
+        "name": name,
+        "qualification": qualification,
+        "specialization": specialization,
+        "location": location,
+    }
+
+    id = session["id"]
+    update_row("users", data, id)
+
+    return redirect("/profile")
+
+
+@app.route("/viewappointments")
+def viewappointments():
+    data, columns = fetch_data_with_query("appointments", session["id"], "patientID")
+    if data == ():
+        flash("You have no appointments", "info")
+    return render_template("p_viewappointments.html", data=data, columns=columns)
+
+
+@app.route("/cancel_appointment", methods=["POST"])
+def cancel_appointment():
+    id = request.form.get("appointmentid")
+
+    delete_row("appointments", id, "AppointmentID")
+
+    return redirect("/appointment")
 
 
 @app.route("/appointment")
@@ -252,7 +478,12 @@ def appointment():
             data, columns = fetch_data_from_table("doctors")
             return render_template("p_appointment.html", data=data)
         elif role == "doctor":
-            return render_template("d_appointment.html")
+            data, columns = fetch_data_with_query(
+                "appointments", session["id"], "DoctorID"
+            )
+            if data == ():
+                flash("You have no appointments")
+            return render_template("d_appointment.html", data=data, columns=columns)
         elif role == "admin":
             data, columns = fetch_data_from_table("appointments")
             return render_template("a_appointment.html", data=data, columns=columns)
@@ -260,11 +491,14 @@ def appointment():
     return redirect(url_for("login"))
 
 
-def get_id(table, name):
+import pyodbc
+
+
+def get_id(table, column, name):
     try:
         conn = pyodbc.connect(conn_str)
         cursor = conn.cursor()
-        query = f"SELECT id FROM {table} WHERE name = ?"
+        query = f"SELECT id FROM {table} WHERE {column} = ?"
         cursor.execute(query, (name,))
         result = cursor.fetchone()
         cursor.close()
@@ -275,8 +509,8 @@ def get_id(table, name):
         return None
 
 
-@app.route("/handle_appointment_action", methods=["POST"])
-def handle_appointment_action():
+@app.route("/handle_appointment_booking", methods=["POST"])
+def handle_appointment_booking():
 
     patient_id = int(session["id"])
     doctor = request.form["doctor"]
@@ -285,19 +519,7 @@ def handle_appointment_action():
     time = request.form["time"]
     details = request.form["details"]
 
-    if not date:
-        flash("Select a date.", "error")
-        return redirect("/appointment")
-
-    if not time:
-        flash("Select a time.", "error")
-        return redirect("/appointment")
-
-    if not location:
-        flash("Select a location.", "error")
-        return redirect("/appointment")
-
-    doctor_id = get_id("doctors", doctor)
+    doctor_id = get_id("doctors", "name", doctor)
     if not doctor_id:
         flash("Doctor not found.", "error")
         return redirect("/appointment")
@@ -311,6 +533,7 @@ def handle_appointment_action():
         "location": location,
         "date": date,
         "time": time,
+        "Fee": 1500,
         "details": details,
         "Status": "pending",
     }
@@ -318,11 +541,39 @@ def handle_appointment_action():
     action = request.form.get("action")
 
     if action == "add":
-        add_row("appointments", appointment_data)
+        if add_row("appointments", appointment_data):
+            flash("Appointment has been booked", "success")
 
-    elif action == "delete":
-        # delete_row("patients", patient_id)
-        delete_row("users", patient_id)
+    return redirect("/appointment")
+
+
+@app.route("/handle_appointment_update", methods=["POST"])
+def handle_appointment_update():
+    appointment_id = request.form["id"]
+    patient = request.form["patient"]
+    doctor = request.form["doctor"]
+    location = request.form["location"]
+    date = request.form["date"]
+    time = request.form["time"]
+    details = request.form["details"]
+    fee = request.form["fee"]
+    status = request.form["status"]
+
+    date = str(datetime.strptime(date, "%Y-%m-%d").date())
+    time = str(datetime.strptime(time, "%H:%M").time())
+
+    appointment_data = {
+        "patientid": patient,
+        "doctorid": doctor,
+        "location": location,
+        "date": date,
+        "time": time,
+        "details": details,
+        "Fee": fee,
+        "Status": status,
+    }
+
+    update_row("appointments", appointment_data, appointment_id, "AppointmentID")
 
     return redirect("/appointment")
 
@@ -364,10 +615,18 @@ def patients():
     if "username" in session and "role" in session:
         role = session["role"]
         if role == "doctor":
-            return render_template("d_patients.html")
+            patients_data, columns = get_doctor_patients(session["id"])
+            if not patients_data:
+                patients_data = [(1, 2, 3), (1, 2, 3)]
+
+            if not columns:
+                columns = (1, 2, 3)
+
+            return render_template(
+                "d_patients.html", data=patients_data, columns=columns
+            )
         elif role == "admin":
             patients_data, columns = fetch_data_from_table("Patients")
-            user_data, columns2 = fetch_data_from_table("users")
             return render_template(
                 "a_patients.html", data=patients_data, columns=columns
             )
@@ -378,12 +637,6 @@ def patients():
 
 @app.route("/handle_patient_action", methods=["POST"])
 def handle_patient_action():
-
-    patient_id = request.form.get("patient_id")
-
-    if not patient_id:
-        flash("Please enter the patient ID.", "error")
-        return redirect("/patients")
 
     action = request.form.get("action")
 
@@ -396,16 +649,12 @@ def handle_patient_action():
     gender = request.form.get("gender")
     health = request.form.get("health")
 
-    if age:
-        age = int(age)
-
-    patient_id = int(patient_id)
-
-    user_data = {"id": patient_id}
+    user_data = {}
 
     if username:
         user_data["username"] = username
     if password:
+
         user_data["password"] = password
 
     user_data["role"] = "patient"
@@ -414,6 +663,8 @@ def handle_patient_action():
         user_data["email"] = email
     if contact:
         user_data["contact"] = contact
+
+    patient_id = get_id("users", "username", username)
 
     patient_data = {
         "id": patient_id,
@@ -437,38 +688,47 @@ def handle_patient_action():
             flash("Please fill in all fields.", "error")
             return redirect("/patients")
         add_row("users", user_data)
+        patient_id = get_id("users", "username", username)
+        patient_data["id"] = patient_id
         add_row("patients", patient_data)
+        flash("Patient has been added", "success")
 
     elif action == "update":
-        update_row("patients", patient_data)
-        if username and password:
-            update_row("users", user_data)
-        elif username or password:
-            flash(
-                "User details not updated. Please enter both username and password to update."
-            )
+        id = request.form.get("id")
+        if not id:
+            flash("Enter ID.", "error")
+        else:
+            update_row("patients", patient_data, id)
+            update_row("users", user_data, id)
 
     elif action == "delete":
-        # delete_row("patients", patient_id)
-        delete_row("users", patient_id)
+        id = request.form.get("id")
+        if not id:
+            flash("Enter ID.", "error")
+        else:
+            delete_row("users", id)
 
     return redirect("/patients")
 
 
 @app.route("/doctors")
 def doctors():
-    doctors_data, columns = fetch_data_from_table("doctors")
-    return render_template("a_doctors.html", data=doctors_data, columns=columns)
+    if "username" in session and "role" in session:
+        role = session["role"]
+        doctors_data, columns = fetch_data_from_table("doctors")
+        if role == "patient":
+            return render_template(
+                "p_doctors.html", doctors=doctors_data, columns=columns
+            )
+        elif role == "admin":
+            return render_template("a_doctors.html", data=doctors_data, columns=columns)
+    else:
+        flash("Please login to access this page", "error")
+        return redirect(url_for("login"))
 
 
 @app.route("/handle_doctor_action", methods=["POST"])
 def handle_doctor_action():
-
-    doctor_id = request.form.get("doctor_id")
-
-    if not doctor_id:
-        flash("Please enter the doctor ID.", "error")
-        return redirect("/doctors")
 
     action = request.form.get("action")
 
@@ -482,13 +742,14 @@ def handle_doctor_action():
     contact = request.form.get("contact")
 
     user_data = {
-        "id": doctor_id,
         "username": username,
         "password": password,
-        "role": "patient",
+        "role": "doctor",
         "email": email,
         "contact": contact,
     }
+
+    doctor_id = get_id("users", "username", username)
 
     doctor_data = {
         "id": doctor_id,
@@ -510,21 +771,62 @@ def handle_doctor_action():
             flash("Please fill in all fields.", "error")
             return redirect("/doctors")
         add_row("users", user_data)
+        doctor_data["id"] = get_id("users", "username", username)
         add_row("doctors", doctor_data)
+        flash("Doctor has been added", "success")
 
     elif action == "update":
-        update_row("doctors", doctor_data)
+        id = request.form.get("id")
+        if not id:
+            flash("Enter ID.", "error")
+        else:
+            update_row("doctors", doctor_data, id)
 
     elif action == "delete":
-        delete_row("doctors", doctor_id)
-        delete_row("users", doctor_id)
+        id = request.form.get("id")
+        if not id:
+            flash("Enter ID.", "error")
+        else:
+            delete_row("users", id)
 
     return redirect("/doctors")
 
 
 @app.route("/suggestions")
 def suggestions():
-    return render_template("suggestions.html")
+    data, col = fetch_data_from_table("suggestions")
+    return render_template("suggestions.html", users=data)
+
+
+@app.route("/post_suggestion", methods=["POST"])
+def post_suggestion():
+
+    username = session["username"]
+    message = request.form["message"]
+
+    data = {"username": username, "suggestion": message}
+
+    if add_row("suggestions", data):
+        flash("Suggestion has been posted", "success")
+
+    return redirect("/suggestions")
+
+
+@app.route("/resources")
+def resources():
+    if "username" in session and "role" in session:
+        data, col = fetch_data_from_table("suggestions")
+        return render_template("resources.html", users=data)
+    flash("Please login to access this page", "error")
+    return redirect(url_for("login"))
+
+
+@app.route("/faq")
+def faq():
+    if "username" in session and "role" in session:
+        return render_template("faq.html")
+    flash("Please login to access this page", "error")
+    return redirect(url_for("login"))
 
 
 if __name__ == "__main__":

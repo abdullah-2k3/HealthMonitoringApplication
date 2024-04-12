@@ -1,19 +1,79 @@
 {% extends 'base_doctor.html' %}
 
 {% block title %}
-    Dashboard
+Dashboard
 {% endblock %}
 
 {% block header %}
-    Dashboard
+Dashboard
 {% endblock %}
 
 {% block content %}
 <div class="main-content">
-  <h2>Dashboard Content</h2>
-  <p>This is your dashboard content.</p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <section id="counts" class="counts shadow">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
+          <div class="count-box">
+            <i class="fas fa-hospital-user"></i>
+            <span data-purecounter-start="0" data-purecounter-end="{{data['patients']}}" data-purecounter-duration="1"
+              class="purecounter"></span>
+            <p>Patients</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+          <div class="count-box">
+            <i class="fas fa-hospital"></i>
+            <span data-purecounter-start="0" data-purecounter-end="{{data['appointments']}}"
+              data-purecounter-duration="1" class="purecounter"></span>
+            <p>Appointments</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+          <div class="count-box">
+            <i class="fas fa-hospital"></i>
+            <span data-purecounter-start="0" data-purecounter-end="{{data['locations']}}" data-purecounter-duration="1"
+              class="purecounter"></span>
+            <p>Practice Locations</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <section id="calendar" class="shadow">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center mb-5">Calendar</h2>
+          <div id="calendar-container"></div>
+        </div>
+      </div>
+      <div style=" align-items: center;
+      display: flex;
+      justify-content: center;">
+        <iframe
+          src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FKarachi&bgcolor=%23ffffff&title=Official%20Holidays&showTabs=0&showPrint=0&src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ucGsjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&src=ZW4tZ2IucGsjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%2333B679&color=%230B8043&color=%230B8043"
+          style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+      </div>
+    </div>
+  </section>
+
 </div>
-
-
 
 {% endblock %}

@@ -1,14 +1,52 @@
 {% extends 'base_doctor.html' %}
 
 {% block title %}
-    Suggestions
+Suggestions
 {% endblock %}
 
 
 {% block header %}
-    Suggestions
+Suggestions
 {% endblock %}
 
 {% block content %}
-    Suggestions area
+<div class="main-content">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <section class=" p-4 rounded shadow mb-2">
+        {% for i in users%}
+        <div class="row mb-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="mb-4"><strong style="color:cadetblue">{{i[0]}}</strong>
+                        <p class="ml-3"> {{i[1]}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </section>
+
+
+    <form action="/post_suggestion" method="post" style="position: fixed; bottom:0px; width: 82%;">
+        <input type="hidden" id="action" name="action" value="add">
+        <div class="form-group mt-3 d-flex">
+            <textarea class="form-control" name="message" rows="1" placeholder="Message" required></textarea>
+            <div class="d-flex align-items-center justify-content-center">
+                &nbsp;&nbsp;&nbsp;<button type="submit" class="btn bg-dark text-light">Post</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
 {% endblock %}
