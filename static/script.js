@@ -145,7 +145,7 @@ function fetchNotificationCount() {
       // Update the notification badge with the fetched count
       var count = JSON.parse(xhr.responseText).count;
       var badge = document.querySelector(".notification-badge");
-      if (badge) {
+      if (badge && count > 0) {
         badge.textContent = count;
       }
     }

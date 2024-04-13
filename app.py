@@ -305,15 +305,30 @@ def inject_variables():
 
 @app.route("/notification_count", methods=["GET"])
 def notification_count():
-    data = fetch_data_with_query("notifications", session["id"], "userid")
-    count = len(data[0]) if data else 0
+    data, cols = fetch_data_with_query("notifications", session["id"], "userid")
+    count = sum(1 for notification in data if notification[3] == "new") if data else 0
     return jsonify({"count": count})
 
 
 @app.route("/reset_notification_count", methods=["POST"])
 def reset_notification_count():
+    update_notification_status(session["id"])
     count = 0
     return "Count reset successfully", 200
+
+
+def update_notification_status(user_id):
+    conn = pyodbc.connect(conn_str)
+    cursor = conn.cursor()
+    try:
+        query = "UPDATE notifications SET status = 'Viewed' WHERE userid = ? AND status = 'New'"
+        cursor.execute(query, (user_id,))
+        conn.commit()
+    except pyodbc.Error as e:
+        print(f"Error updating notification status: {e}")
+    finally:
+        cursor.close()
+        conn.close()
 
 
 @app.route("/register")
