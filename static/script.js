@@ -1,148 +1,3 @@
-function fetchData() {
-  return fetch("/patient-data")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json(); // Parse JSON response
-    })
-    .then((json) => {
-      // Check if the response contains valid data
-      if (!Array.isArray(json.data)) {
-        throw new Error("Invalid data format");
-      }
-      // Process the fetched data
-      displayData(json);
-      displayChart(json.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-}
-
-function displayData(json) {
-  // Extract column headers and data from JSON response
-  var columns = json.columns;
-  var data = json.data;
-
-  // Clear existing content (if any)
-  var container = document.getElementById("data-container");
-  container.innerHTML = "";
-
-  // Create cards for each value
-  data.forEach((row) => {
-    // Iterate through each column
-    columns.forEach((column) => {
-      // Create card element
-      var card = document.createElement("div");
-      card.classList.add("col-12", "col-md-4", "mb-4"); // Bootstrap column classes
-
-      // Create card body
-      var cardBody = document.createElement("div");
-      cardBody.classList.add("card", "shadow-sm");
-
-      // Create card content
-      var cardContent = document.createElement("div");
-      cardContent.classList.add("card-body");
-
-      // Add column name as card title
-      var cardTitle = document.createElement("h5");
-      cardTitle.classList.add("card-title");
-      cardTitle.textContent = column;
-      cardContent.appendChild(cardTitle);
-
-      // Add value to card content
-      var value = document.createElement("p");
-      value.textContent = row[column];
-      cardContent.appendChild(value);
-
-      cardBody.appendChild(cardContent);
-      card.appendChild(cardBody);
-      container.appendChild(card);
-    });
-  });
-}
-
-function displayChart(data) {
-  // Check if data is an array
-  if (!Array.isArray(data)) {
-    console.error("Data is not an array:", data);
-    return;
-  }
-
-  var ctx = document.getElementById("health-chart").getContext("2d");
-
-  // Extract relevant data for the chart
-  var labels = data.map((item, index) => `Patient ${index + 1}`);
-  var heightData = data.map((item) => item.Height);
-  var weightData = data.map((item) => item.Weight);
-  var bmiData = data.map((item) => calculateBMI(item.Height, item.Weight));
-
-  // Ensure all required data is available
-  if (
-    !labels.length ||
-    !heightData.length ||
-    !weightData.length ||
-    !bmiData.length
-  ) {
-    console.error("Incomplete data:", labels, heightData, weightData, bmiData);
-    return;
-  }
-
-  var chart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Height (cm)",
-          data: heightData,
-          borderColor: "rgba(75, 192, 192, 1)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          borderWidth: 1,
-        },
-        {
-          label: "Weight (kg)",
-          data: weightData,
-          borderColor: "rgba(255, 99, 132, 1)",
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-          borderWidth: 1,
-        },
-        {
-          label: "BMI",
-          data: bmiData,
-          borderColor: "rgba(54, 162, 235, 1)",
-          backgroundColor: "rgba(54, 162, 235, 0.2)",
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-            },
-          },
-        ],
-      },
-    },
-  });
-}
-
-// Call displayChart function with data when page loads
-window.onload = function () {
-  fetchData()
-    .then((data) => {
-      displayData(data);
-      displayChart(data);
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-};
-
 function calculateBMI(height, weight) {
   // Convert height to meters
   var heightInMeters = height / 100;
@@ -153,27 +8,6 @@ function calculateBMI(height, weight) {
   // Round BMI to two decimal places
   return bmi.toFixed(2);
 }
-
-function populateTableWithData(data) {
-  const tableBody = document.getElementById("data-table");
-  if (tableBody) {
-    tableBody.innerHTML = "";
-    data.forEach((item) => {
-      const row = `
-        <tr>
-          <td>${item.name}</td>
-          <td>${item.age}</td>
-          <td>${item.education}</td>
-          <td>${item.job}</td>
-        </tr>`;
-      tableBody.innerHTML += row;
-    });
-  }
-}
-
-fetchData().then((data) => {
-  populateTableWithData(data);
-});
 
 // Function to load page
 function loadPage(page, pageTitle, pageUrl) {
@@ -260,3 +94,91 @@ function cancelAppointment() {
     popup.style.display = "none";
   });
 }
+
+function ToggleNav() {
+  var sidebar = document.getElementById("mySidebar");
+  if (sidebar.style.width == "0px") {
+    openNav();
+  } else {
+    closeNav();
+  }
+}
+
+function openNav() {
+  document.getElementById("mySidebar").style.width = "200px";
+  document.getElementById("mySidebar").style.padding = "20px";
+  document.querySelector(".sidebar-image").style.display = "block";
+  document.getElementById("my_header").style.marginLeft = "0px";
+  document.getElementById("main-content").style.marginLeft = "0px";
+}
+
+function closeNav() {
+  document.getElementById("my_header").style.marginLeft = "-200px";
+  document.getElementById("mySidebar").style.width = "0px";
+  document.getElementById("mySidebar").style.padding = "0";
+  document.querySelector(".sidebar-image").style.display = "none";
+  document.getElementById("main-content").style.marginLeft = "-205px";
+}
+
+function getDate() {
+  var currentDate = new Date();
+  var year = currentDate.getFullYear();
+  var month = currentDate.getMonth() + 1; // Adding 1 to make it 1-indexed
+  var day = currentDate.getDate();
+  var formattedDate = year + "-" + month + "-" + day;
+
+  return formattedDate;
+}
+
+//----Notification Count Badge-----
+// Fetch the initial notification count when the page loads
+document.addEventListener("DOMContentLoaded", function () {
+  fetchNotificationCount();
+});
+
+function fetchNotificationCount() {
+  // Function to fetch notification count
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/notification_count", true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      // Update the notification badge with the fetched count
+      var count = JSON.parse(xhr.responseText).count;
+      var badge = document.querySelector(".notification-badge");
+      if (badge) {
+        badge.textContent = count;
+      }
+    }
+  };
+  xhr.send();
+}
+
+// Event listener for the notification button
+document
+  .getElementById("notification-button")
+  .addEventListener("click", function (event) {
+    // Prevent the default behavior of the link
+    event.preventDefault();
+
+    // Remove the badge from the DOM
+    var badge = document.querySelector(".notification-badge");
+    if (badge) {
+      badge.remove();
+    }
+
+    // Send an AJAX request to reset the notification count
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/reset_notification_count", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        // Notification count reset successfully
+        // Fetch the updated count from the server
+        fetchNotificationCount();
+
+        // Redirect to the notifications page
+        window.location.href = "/notifications";
+      }
+    };
+    xhr.send();
+  });

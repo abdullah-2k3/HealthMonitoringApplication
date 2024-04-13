@@ -1,4 +1,4 @@
-{% extends 'base_patient.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
 Profile
@@ -62,7 +62,7 @@ Profile
 
   <section class=" p-4 rounded shadow mb-4 section-bg">
     <h3 class="mb-4">Edit Options</h3>
-    <form id="actionForm" action="/update_doctor_profile" method="post">
+    <form id="actionForm" action="/update_patient_profile" method="post">
       <input type="hidden" id="action" name="action" value="update">
       <div class="row">
         <div class="col-md-4">

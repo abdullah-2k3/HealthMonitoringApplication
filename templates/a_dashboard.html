@@ -1,4 +1,4 @@
-{% extends 'base_admin.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
 Dashboard
@@ -23,8 +23,19 @@ Dashboard
 
   <section id="counts" class="counts shadow">
     <div class="container">
-
+      <div class="section-title">
+        <h2>Summary</h2>
+      </div>
       <div class="row">
+
+        <div class="col-lg-3 col-md-6">
+          <div class="count-box">
+            <i class="fas fa-user"></i>
+            <span data-purecounter-start="0" data-purecounter-end="{{data['users']}}" data-purecounter-duration="1"
+              class="purecounter"></span>
+            <p>Users</p>
+          </div>
+        </div>
 
         <div class="col-lg-3 col-md-6">
           <div class="count-box">
@@ -53,26 +64,50 @@ Dashboard
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-          <div class="count-box">
-            <i class="fas fa-award"></i>
-            <span data-purecounter-start="0" data-purecounter-end="150" data-purecounter-duration="1"
-              class="purecounter"></span>
-            <p>Awards</p>
-          </div>
-        </div>
-
       </div>
 
     </div>
   </section><!-- End Counts Section -->
 
-
-  <h2>Dashboard Content</h2>
-  <p>This is your dashboard content.</p>
+  <div class="chart-container mt-5">
+    <canvas id="myChart"></canvas>
+  </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 
+<script>
+  const data = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    datasets: [{
+      label: 'Appointments',
+      backgroundColor: 'rgba(100, 99, 255, 0.3)',
+      data: [65, 59, 80, 81, 56, 55, 40]
+    }]
+  };
+
+  // Configuration options for the chart
+  const options = {
+
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  };
+
+  // Get the canvas element
+  const ctx = document.getElementById('myChart').getContext('2d');
+
+  // Create the chart
+  const myChart = new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: options
+  });
+</script>
 
 {% endblock %}

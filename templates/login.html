@@ -27,7 +27,6 @@
             <label for="pwd">Password:</label>
             <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password" required>
           </div>
-
           {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
           {% for category, message in messages %}
@@ -35,20 +34,16 @@
             {{ message }}
           </div>
           {% endfor %}
-          <script>
-            // Set a timer to hide the flash message after 3 seconds
-            setTimeout(function () {
-              $('#flash-message').fadeOut('fast');
-            }, 3000);
-          </script>
           {% endif %}
           {% endwith %}
+
           <div class="btn-container">
             <button type="submit" class="btn btn-dark mr-5">Login</button>
             Don't have an account?
             <a href="/register" class="btn btn-primary btn-register">Register</a>
           </div>
         </form>
+
       </section>
     </div>
   </div>

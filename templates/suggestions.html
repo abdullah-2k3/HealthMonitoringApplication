@@ -1,4 +1,4 @@
-{% extends 'base_doctor.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
 Suggestions
@@ -22,13 +22,14 @@ Suggestions
     {% endif %}
     {% endwith %}
 
-    <section class=" p-4 rounded shadow mb-2">
+    <section class=" p-4 rounded shadow mb-2" style="background: #ddddde;">
         {% for i in users%}
         <div class="row mb-2">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="mb-4"><strong style="color:cadetblue">{{i[0]}}</strong>
-                        <p class="ml-3"> {{i[1]}}</p>
+                    <h5>{{i[2]}}</h5>
+                    <div class="mb-4"><strong style="color:cadetblue">{{i[1]}}</strong>
+                        <p class="ml-3"> {{i[3]}}</p>
                     </div>
                 </div>
             </div>
@@ -37,9 +38,11 @@ Suggestions
     </section>
 
 
-    <form action="/post_suggestion" method="post" style="position: fixed; bottom:0px; width: 82%;">
+    <form action="/post_suggestion" method="post" style="position: fixed; bottom:0px; width: 80%; align-self: center;">
         <input type="hidden" id="action" name="action" value="add">
         <div class="form-group mt-3 d-flex">
+            <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject"
+                style="width: 30%;">
             <textarea class="form-control" name="message" rows="1" placeholder="Message" required></textarea>
             <div class="d-flex align-items-center justify-content-center">
                 &nbsp;&nbsp;&nbsp;<button type="submit" class="btn bg-dark text-light">Post</button>

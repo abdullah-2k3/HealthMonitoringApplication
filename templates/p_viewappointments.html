@@ -1,4 +1,4 @@
-{% extends 'base_patient.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
 View Appointments
@@ -29,12 +29,14 @@ View Appointments
 
       <div class="section-title">
         <h2>Your Appointments</h2>
-
+        <p>Note that the canceled appointments are not shown on this page, you can see them in the notifications. For
+          more
+          details, you can reach out the admin.</p>
       </div>
 
-      <div class="row">
-
-        {% for i in data %}
+      {% for i in data %}
+      {% if i[8] != "canceled"%}
+      <div class="row mb-5">
 
         <div class="member d-flex align-items-start">
           <div class="pic"><img src="./static/app.png" class="img-fluid" alt=""></div>
@@ -55,6 +57,7 @@ View Appointments
             <p class="mb-4"> <b>Charges:</b> {{ i[6] }}</p>
             <p class="mb-4"> <b>Location:</b> {{ i[3] }}</p>
             <p> <b>Status: </b>{{ i[8] }}</p>
+
             <div class="btn-width">
               <form id="cancel-appointment-form" action="{{ url_for('cancel_appointment') }}" method="post">
                 <input type="hidden" name="appointmentid" value="{{ i[0] }}">
@@ -66,12 +69,14 @@ View Appointments
               <button id="confirm-button" class="btn btn-danger mb-2">Yes, cancel</button>
               <button id="cancel-button" class="btn btn-secondary">No, go back</button>
             </div>
+
           </div>
 
         </div>
 
-        {% endfor %}
       </div>
+      {%endif%}
+      {% endfor %}
     </div>
   </section>
 </div>

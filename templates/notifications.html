@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+
+
+{% block title %}
+Notifications
+{% endblock %}
+
+
+{% block header %}
+Notifications
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <section class="container">
+        <div class=" section-title ">
+            <h2>Notifications</h2>
+        </div>
+        {%if data%}
+        {% for i in data%}
+        <div class="row mb-2" style="background: #ddddde;">
+            <div class="panel-body">
+                <div class="mb-2 mt-2">
+                    <p class="ml-2" style="color:rgb(95, 110, 160);">{{i[2]}}</p>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+        {%else%}
+        <h3 style="background-color:azure   ;">You have no new Notifications :)</h3>
+        {%endif%}
+    </section>
+
+
+</div>
+{% endblock %}

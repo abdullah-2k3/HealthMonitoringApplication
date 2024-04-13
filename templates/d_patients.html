@@ -1,4 +1,4 @@
-{% extends 'base_doctor.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
 Patients
@@ -33,15 +33,15 @@ Patients
 
             <div class="row">
 
-                {% for doctor in data %}
+                {% for i in data %}
 
                 <div class="col-lg-6">
                     <div class="member d-flex align-items-start">
                         <div class="pic"><img src="./static/user-logo.png" class="img-fluid" alt=""></div>
                         <div class="member-info">
-                            <h4>{{ doctor[1] }}</h4> <span>{{ doctor[2] }}</span>
-                            <p> Age: {{ doctor[3] }}</p>
-                            <p>Health Status: {{ doctor[4] }} </p>
+                            <h4>{{ i[1] }}</h4> <span>{{ i[2] }}</span>
+                            <p> Age: {{ i[3] }}</p>
+                            <p>Health Status: {{ i[4] }} </p>
                             <div class="social"> <a href=""><i class="ri-twitter-fill"></i></a> <a href=""><i
                                         class="ri-facebook-fill"></i></a> <a href=""><i
                                         class="ri-instagram-fill"></i></a> <a href=""> <i

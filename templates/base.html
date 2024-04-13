@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2aOtHXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./static/styles.css">
 
     <title>{% block title %}{% endblock %}</title>
@@ -48,35 +51,151 @@
 <body>
 
     <div class="topbar">
-        <div class="logo-container">
+        <div id="main">
+            <button class="btn text-light mr-3" onclick="ToggleNav()">☰ </button>
+        </div>
+        <div class="logo-container ml-3">
             <img src="./static/health.png" alt="Image" height="auto" class="topbar-image">
             <div class="logo">Healthline Pro</div>
         </div>
-        <div class="logout-button">
+
+        <div class="notification-container">
+            <a id="notification-button" href="/notifications">
+                <i class="fas fa-bell mr-1"> </i>
+                <span class="notification-badge"></span>
+            </a>
+        </div>
+
+        <div class="ml-4" style="font-size: 20px;">
+            {{username}}
+        </div>
+
+        <div class="logout-button ml-5">
             <a href="/logout">Logout</a>
         </div>
     </div>
-    <div class="my_header">
+
+    <div id="mySidebar" class="sidebar">
+        <div class="container">
+            <img src="./static/user-logo.png" alt="Image" height="auto" class="sidebar-image">
+            <div class="mb-3 sidebar-label">{{username}} ({{role}}) </div>
+        </div>
+
+
+        {%if role == "patient"%}
+        <button onclick="loadPage('p_dashboard.html', 'Dashboard', '/dashboard')">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+        </button>
+
+        <button onclick="loadPage('p_profile.html', 'Profile', '/profile')">
+            <i class="fas fa-user"></i>
+            Profile
+        </button>
+
+        <button onclick="loadPage('p_doctors.html', 'Doctors', '/doctors')">
+            <i class="fas fa-user-md"></i>
+            Doctors
+        </button>
+
+        <button onclick="loadPage('p_viewappointments.html', 'View Appointments', '/viewappointments')">
+            <i class="fas fa-calendar-check"></i>
+            View Appointments
+        </button>
+
+        <button onclick="loadPage('p_appointment.html', 'Appointment', '/appointment')">
+            <i class="fas fa-calendar-plus"></i>
+            Request Appointment
+        </button>
+
+        <button onclick="loadPage('resources.html', 'Resources', '/resources')">
+            <i class="fas fa-file-medical-alt"></i>
+            Resources
+        </button>
+
+        <button onclick="loadPage('faq.html', 'FAQs', '/faq')">
+            <i class="fas fa-question-circle"></i>
+            FAQs
+        </button>
+
+        {%elif role == "doctor" %}
+        <button onclick="loadPage('d_dashboard.html', 'Dashboard', '/dashboard')">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+        </button>
+
+        <button onclick="loadPage('d_profile.html', 'Profile', '/profile')">
+            <i class="fas fa-user"></i>
+            Profile
+        </button>
+
+        <button onclick="loadPage('d_patients.html', 'Patients', '/patients')">
+            <i class="fas fa-user-md"></i>
+            Patients
+        </button>
+
+        <button onclick="loadPage('d_appointment.html', 'Appointment', '/appointment')">
+            <i class="fas fa-calendar-plus"></i>
+            Appointments
+        </button>
+
+        <button onclick="loadPage('suggestions.html', 'Suggestions', '/suggestions')">
+            <i class="fas fa-file-medical-alt"></i>
+            Suggestions
+        </button>
+
+        {%elif role == "admin" %}
+        <button onclick="loadPage('a_dashboard.html', 'Dashboard', '/dashboard')">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+        </button>
+
+        <button onclick="loadPage('a_profile.html', 'Profile', '/profile')">
+            <i class="fas fa-user"></i>
+            Profile
+        </button>
+
+        <button onclick="loadPage('a_doctors.html', 'Doctors', '/doctors')">
+            <i class="fas fa-user-md"></i>
+            Doctors
+        </button>
+
+        <button onclick="loadPage('a_patients.html', 'Patients', '/patients')">
+            <i class="fas fa-user-md"></i>
+            Patients
+        </button>
+
+        <button onclick="loadPage('a_users.html', 'Users', '/users')">
+            <i class="fas fa-user"></i>
+            Users
+        </button>
+
+        <button onclick="loadPage('a_appointment.html', 'Appointment', '/appointment')">
+            <i class="fas fa-calendar-plus"></i>
+            Appointments
+        </button>
+        {%endif%}
+    </div>
+
+    <div id="my_header" class="my_header">
         <h2>{%block header%}{% endblock %}</h2>
     </div>
 
+    <div id="main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
 
-
-    {% block sidebar %}
-    {% endblock %}
-
-    {% block content %}
-    {% endblock %}
-
+    <script src="./static/script.js"></script>
 
     <script src="./static/assets/vendor/purecounter/purecounter_vanilla.js"></script>
     <script src="./static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="./static/assets/vendor/glightbox/js/glightbox.min.js"></script>
     <script src="./static/assets/vendor/swiper/swiper-bundle.min.js"></script>
     <script src="./static/assets/vendor/php-email-form/validate.js"></script>
-
-
     <script src="./static/assets/js/main.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"></script>
 

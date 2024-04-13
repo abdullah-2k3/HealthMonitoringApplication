@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.secret_key = "hello"
 
 
+# To remove the browser cache once logged out
 @app.after_request
 def add_cache_control(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -23,13 +24,10 @@ def fetch_data_from_table(table_name):
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
-    # Execute SQL query to fetch data from the specified table
     cursor.execute(f"SELECT * FROM {table_name}")
 
-    # Fetch data
     table_data = cursor.fetchall()
 
-    # Fetch column headers
     columns = [column[0] for column in cursor.description]
 
     cursor.close()
@@ -38,28 +36,21 @@ def fetch_data_from_table(table_name):
     return table_data, columns
 
 
-import pyodbc
-
-
 def fetch_data_with_query(table_name, row_id, _=None):
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
     try:
-        # Execute SQL query to fetch data from the specified table with the given row_id
         if _ == None:
             query = f"SELECT * FROM {table_name} WHERE id = ?"
         else:
             query = f"SELECT * FROM {table_name} WHERE {_} = ?"
         cursor.execute(query, (row_id,))
 
-        # Fetch data
         table_data = cursor.fetchall()
 
-        # Check if any rows were returned
         if not table_data:
             print(f"No row found with id {row_id}")
-            table_data = ()
 
         columns = [column[0] for column in cursor.description]
 
@@ -104,18 +95,19 @@ def delete_row(table_name, row_id, _=None):
 
     try:
         if _ == None:
-            _ = id
+            _ = "id"
         delete_query = f"DELETE FROM {table_name} WHERE {_} = ?"
         cursor.execute(delete_query, (row_id,))
         conn.commit()
+        return True
         if cursor.rowcount == 0:
             flash("Row not found", "error")
         else:
             flash("Row deleted successfully", "warning")
     except pyodbc.Error as e:
         print(f"Error deleting row: {e}")
-        flash("An error occurred while deleting the row", "error")
-
+        flash(str(e), "error")
+        return False
     finally:
         cursor.close()
         conn.close()
@@ -161,7 +153,6 @@ def update_row(table_name, row_data, row_id, _=None):
         columns = [key for key in row_data.keys()]
 
         if not row_data:
-            flash("No values provided for update.", "warning")
             return
 
         set_clause = ", ".join([f"{column} = ?" for column in row_data.keys()])
@@ -206,6 +197,21 @@ def authenticate_user(username, password):
         return user_data if user_data else None
     except Exception as e:
         flash(str(e), "warning")
+        return None
+
+
+def get_user_role(id):
+    try:
+        conn = pyodbc.connect(conn_str)
+        cursor = conn.cursor()
+        query = "SELECT role FROM users WHERE id = ?"
+        cursor.execute(query, (id))
+        role = str(cursor.fetchone()[0])
+        cursor.close()
+        conn.close()
+        return role if role else None
+    except Exception as e:
+        flash("No record found", "warning")
         return None
 
 
@@ -264,11 +270,13 @@ def dashboard():
             doctors, col = fetch_data_from_table("doctors")
             patients, col = fetch_data_from_table("patients")
             appointments, col = fetch_data_from_table("appointments")
+            users, col = fetch_data_from_table("users")
 
             data = {
                 "doctors": len(doctors),
                 "patients": len(patients),
                 "appointments": len(appointments),
+                "users": len(users),
             }
 
             return render_template("a_dashboard.html", data=data)
@@ -285,6 +293,27 @@ def logout():
 @app.route("/")
 def index():
     return render_template("login.html")
+
+
+@app.context_processor
+def inject_variables():
+    if "username" in session and "role" in session:
+        return dict(role=session["role"], username=session["username"])
+    dummy = {"role": "role", "username": "username"}
+    return dummy
+
+
+@app.route("/notification_count", methods=["GET"])
+def notification_count():
+    data = fetch_data_with_query("notifications", session["id"], "userid")
+    count = len(data[0]) if data else 0
+    return jsonify({"count": count})
+
+
+@app.route("/reset_notification_count", methods=["POST"])
+def reset_notification_count():
+    count = 0
+    return "Count reset successfully", 200
 
 
 @app.route("/register")
@@ -320,9 +349,8 @@ def handle_register_patient():
         "email": email,
         "contact": contact,
     }
-    id = 0
     patient_data = {
-        "id": id,
+        "id": 0,
         "name": name,
         "gender": gender,
         "age": age,
@@ -448,7 +476,30 @@ def update_doctor_profile():
     }
 
     id = session["id"]
-    update_row("users", data, id)
+    update_row("doctors", data, id)
+
+    return redirect("/profile")
+
+
+@app.route("/update_patient_profile", methods=["POST"])
+def update_patient_profile():
+
+    update_user_profile()
+
+    name = request.form["name"]
+    age = request.form["age"]
+    gender = request.form["gender"]
+    health = request.form["health"]
+
+    data = {
+        "name": name,
+        "age": age,
+        "gender": gender,
+        "health": health,
+    }
+
+    id = session["id"]
+    update_row("patients", data, id)
 
     return redirect("/profile")
 
@@ -463,11 +514,27 @@ def viewappointments():
 
 @app.route("/cancel_appointment", methods=["POST"])
 def cancel_appointment():
-    id = request.form.get("appointmentid")
+    id = session["id"]
+    role = get_user_role(id)
+    column = "patientid"
+    if role == "doctor":
+        column = "doctorid"
 
-    delete_row("appointments", id, "AppointmentID")
+    data = {"Status": "canceled"}
 
-    return redirect("/appointment")
+    update_row("appointments", data, id, column)
+
+    appointment_data, col = fetch_data_with_query("appointments", id, column)
+
+    notification = {
+        "userid": id,
+        "notification": f"You cancelled your appointment on {appointment_data[0][4]} at {appointment_data[0][5][:8]}",
+        "status": "New",
+    }
+
+    add_row("notifications", notification)
+
+    return redirect("/viewappointments")
 
 
 @app.route("/appointment")
@@ -616,11 +683,6 @@ def patients():
         role = session["role"]
         if role == "doctor":
             patients_data, columns = get_doctor_patients(session["id"])
-            if not patients_data:
-                patients_data = [(1, 2, 3), (1, 2, 3)]
-
-            if not columns:
-                columns = (1, 2, 3)
 
             return render_template(
                 "d_patients.html", data=patients_data, columns=columns
@@ -697,16 +759,24 @@ def handle_patient_action():
         id = request.form.get("id")
         if not id:
             flash("Enter ID.", "error")
+        elif get_user_role(id) != "patient":
+            flash("Wrong ID", "warning")
         else:
             update_row("patients", patient_data, id)
+            user_data["role"] = None
             update_row("users", user_data, id)
 
     elif action == "delete":
         id = request.form.get("id")
         if not id:
             flash("Enter ID.", "error")
+        elif get_user_role(id) != "patient":
+            flash("Wrong ID", "warning")
         else:
-            delete_row("users", id)
+            if delete_row("users", id):
+                flash("Patient has been removed", "warning")
+            else:
+                flash("Could not remove Patient", "warning")
 
     return redirect("/patients")
 
@@ -757,6 +827,7 @@ def handle_doctor_action():
         "qualification": qualification,
         "specialization": specialization,
         "location": locations,
+        "charges": 1500,
     }
 
     if action == "add":
@@ -779,15 +850,23 @@ def handle_doctor_action():
         id = request.form.get("id")
         if not id:
             flash("Enter ID.", "error")
+        elif get_user_role(id) != "doctor":
+            flash("Wrong ID", "warning")
         else:
+            update_row("users", user_data, id)
             update_row("doctors", doctor_data, id)
 
     elif action == "delete":
         id = request.form.get("id")
         if not id:
             flash("Enter ID.", "error")
+        elif get_user_role(id) != "doctor":
+            flash("Wrong ID", "warning")
         else:
-            delete_row("users", id)
+            if delete_row("users", id):
+                flash("Doctor has been removed", "warning")
+            else:
+                flash("Could not remove doctor", "warning")
 
     return redirect("/doctors")
 
@@ -803,8 +882,9 @@ def post_suggestion():
 
     username = session["username"]
     message = request.form["message"]
+    subject = request.form["subject"]
 
-    data = {"username": username, "suggestion": message}
+    data = {"username": username, "subject": subject, "suggestion": message}
 
     if add_row("suggestions", data):
         flash("Suggestion has been posted", "success")
@@ -825,6 +905,15 @@ def resources():
 def faq():
     if "username" in session and "role" in session:
         return render_template("faq.html")
+    flash("Please login to access this page", "error")
+    return redirect(url_for("login"))
+
+
+@app.route("/notifications")
+def notifications():
+    if "username" in session and "role" in session:
+        data, cols = fetch_data_with_query("notifications", session["id"], "userid")
+        return render_template("notifications.html", data=data)
     flash("Please login to access this page", "error")
     return redirect(url_for("login"))
 
