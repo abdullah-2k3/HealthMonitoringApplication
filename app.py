@@ -538,21 +538,50 @@ def cancel_appointment():
     update_row("appointments", data, id, "appointmentid")
 
     appointment_data, col = fetch_data_with_query("appointments", id, "appointmentid")
-
+    patientid = appointment_data[0][1]
+    doctorid = appointment_data[0][2]
     message = f"Your appointment on {appointment_data[0][4]} at {appointment_data[0][5][:8]} is canceled by User ID {userid}."
+
+    send_appointment_notification(doctorid, patientid, message)
+
+    if session["role"] == "patient":
+        return redirect("/viewappointments")
+
+    return redirect("/appointment")
+
+
+@app.route("/confirm_appointment", methods=["POST"])
+def confirm_appointment():
+    id = request.form["appointmentid"]
+    userid = session["id"]
+
+    data = {"Status": "confirmed"}
+
+    update_row("appointments", data, id, "appointmentid")
+
+    appointment_data, col = fetch_data_with_query("appointments", id, "appointmentid")
+    patientid = appointment_data[0][1]
+    doctorid = appointment_data[0][2]
+    message = f"Your appointment on {appointment_data[0][4]} at {appointment_data[0][5][:8]} is confirmed."
+
+    send_appointment_notification(doctorid, patientid, message)
+
+    if session["role"] == "patient":
+        return redirect("/viewappointments")
+
+    return redirect("/appointment")
+
+
+def send_appointment_notification(doctorid, patientid, message):
     notification = {
-        "userid": appointment_data[0][2],  # doctorid
+        "userid": doctorid,  # doctorid
         "notification": message,
         "status": "new",
     }
     add_row("notifications", notification)
 
-    notification["userid"] = appointment_data[0][1]  # patientid
+    notification["userid"] = patientid  # patientid
     add_row("notifications", notification)
-    if session["role"] == "patient":
-        return redirect("/viewappointments")
-
-    return redirect("/appointment")
 
 
 @app.route("/appointment", methods=["GET", "POST"])
