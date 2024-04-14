@@ -110,6 +110,12 @@ function openNav() {
   document.querySelector(".sidebar-image").style.display = "block";
   document.getElementById("my_header").style.marginLeft = "0px";
   document.getElementById("main-content").style.marginLeft = "0px";
+
+  var sidebarButtons = document.querySelectorAll(".sidebar button");
+  sidebarButtons.forEach(function (button) {
+    button.style.paddingleft = "10px";
+    button.style.display = "block";
+  });
 }
 
 function closeNav() {
@@ -118,6 +124,12 @@ function closeNav() {
   document.getElementById("mySidebar").style.padding = "0";
   document.querySelector(".sidebar-image").style.display = "none";
   document.getElementById("main-content").style.marginLeft = "-205px";
+
+  var sidebarButtons = document.querySelectorAll(".sidebar button");
+  sidebarButtons.forEach(function (button) {
+    button.style.paddingleft = "0px";
+    button.style.display = "none";
+  });
 }
 
 function getDate() {

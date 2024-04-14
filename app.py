@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 import pyodbc
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import jsonify
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ def add_cache_control(response):
 
 conn_str = "Driver={SQL Server};Server=DESKTOP-5REV9KP\SQLEXPRESS;Database=HealthMonitoringSystem"
 
-conn = pyodbc.connect(conn_str)
+# conn = pyodbc.connect(conn_str)
 
 
 def fetch_data_from_table(table_name):
@@ -137,7 +137,7 @@ def add_row(table_name, row_data):
         conn.close()
 
 
-def update_row(table_name, row_data, row_id, _=None):
+def update_row(table_name, row_data, row_id, _="id"):
     conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
@@ -157,10 +157,7 @@ def update_row(table_name, row_data, row_id, _=None):
 
         set_clause = ", ".join([f"{column} = ?" for column in row_data.keys()])
 
-        if _ is None:
-            update_query = f"UPDATE {table_name} SET {set_clause} WHERE id = ?"
-        else:
-            update_query = f"UPDATE {table_name} SET {set_clause} WHERE {_} = ?"
+        update_query = f"UPDATE {table_name} SET {set_clause} WHERE {_} = ?"
 
         values = list(row_data.values()) + [row_id]
 
@@ -306,7 +303,11 @@ def inject_variables():
 @app.route("/notification_count", methods=["GET"])
 def notification_count():
     data, cols = fetch_data_with_query("notifications", session["id"], "userid")
-    count = sum(1 for notification in data if notification[3] == "new") if data else 0
+    count = (
+        sum(1 for notification in data if notification[3].lower() == "new")
+        if data
+        else 0
+    )
     return jsonify({"count": count})
 
 
@@ -529,30 +530,32 @@ def viewappointments():
 
 @app.route("/cancel_appointment", methods=["POST"])
 def cancel_appointment():
-    id = session["id"]
-    role = get_user_role(id)
-    column = "patientid"
-    if role == "doctor":
-        column = "doctorid"
+    id = request.form["appointmentid"]
+    userid = session["id"]
 
     data = {"Status": "canceled"}
 
-    update_row("appointments", data, id, column)
+    update_row("appointments", data, id, "appointmentid")
 
-    appointment_data, col = fetch_data_with_query("appointments", id, column)
+    appointment_data, col = fetch_data_with_query("appointments", id, "appointmentid")
 
+    message = f"Your appointment on {appointment_data[0][4]} at {appointment_data[0][5][:8]} is canceled by User ID {userid}."
     notification = {
-        "userid": id,
-        "notification": f"You cancelled your appointment on {appointment_data[0][4]} at {appointment_data[0][5][:8]}",
-        "status": "New",
+        "userid": appointment_data[0][2],  # doctorid
+        "notification": message,
+        "status": "new",
     }
-
     add_row("notifications", notification)
 
-    return redirect("/viewappointments")
+    notification["userid"] = appointment_data[0][1]  # patientid
+    add_row("notifications", notification)
+    if session["role"] == "patient":
+        return redirect("/viewappointments")
+
+    return redirect("/appointment")
 
 
-@app.route("/appointment")
+@app.route("/appointment", methods=["GET", "POST"])
 def appointment():
     if "username" in session and "role" in session:
         role = session["role"]
@@ -573,9 +576,6 @@ def appointment():
     return redirect(url_for("login"))
 
 
-import pyodbc
-
-
 def get_id(table, column, name):
     try:
         conn = pyodbc.connect(conn_str)
@@ -591,8 +591,8 @@ def get_id(table, column, name):
         return None
 
 
-@app.route("/handle_appointment_booking", methods=["POST"])
-def handle_appointment_booking():
+@app.route("/handle_appointment_request", methods=["POST"])
+def handle_appointment_request():
 
     patient_id = int(session["id"])
     doctor = request.form["doctor"]
@@ -609,6 +609,14 @@ def handle_appointment_booking():
     date = str(datetime.strptime(date, "%Y-%m-%d").date())
     time = str(datetime.strptime(time, "%H:%M").time())
 
+    existing_appointments, cols = fetch_data_with_query(
+        "appointments", doctor_id, "doctorid"
+    )
+
+    if any(appt[4] == date and appt[5] == time for appt in existing_appointments):
+        flash("Appointment not available in this slot.", "warning")
+        return redirect("/appointment")
+
     appointment_data = {
         "patientid": patient_id,
         "doctorid": doctor_id,
@@ -617,14 +625,34 @@ def handle_appointment_booking():
         "time": time,
         "Fee": 1500,
         "details": details,
-        "Status": "pending",
+        "Status": "not confirmed",
     }
 
-    action = request.form.get("action")
+    if add_row("appointments", appointment_data):
+        flash(
+            "Appointment has been requested, you will be notified when it is confirmed.",
+            "success",
+        )
 
-    if action == "add":
-        if add_row("appointments", appointment_data):
-            flash("Appointment has been booked", "success")
+    message = f"Your appointment on {date} at {time} has been requested. You will be notified here when it is confirmed."
+
+    patient_notification_data = {
+        "userid": patient_id,
+        "notification": message,
+        "status": "new",
+    }
+
+    add_row("notifications", patient_notification_data)
+
+    message = f"You have an appointment request from patient id {patient_id} on {date} at {time}."
+
+    doctor_notification_data = {
+        "userid": doctor_id,
+        "notification": message,
+        "status": "new",
+    }
+
+    add_row("notifications", doctor_notification_data)
 
     return redirect("/appointment")
 
@@ -928,7 +956,7 @@ def faq():
 def notifications():
     if "username" in session and "role" in session:
         data, cols = fetch_data_with_query("notifications", session["id"], "userid")
-        return render_template("notifications.html", data=data)
+        return render_template("notifications.html", data=data, role=session["role"])
     flash("Please login to access this page", "error")
     return redirect(url_for("login"))
 

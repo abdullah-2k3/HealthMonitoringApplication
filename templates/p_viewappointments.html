@@ -35,7 +35,7 @@ View Appointments
       </div>
 
       {% for i in data %}
-      {% if i[8] != "canceled"%}
+      {% if i[8] != "canceled" and i[8] != 'not confirmed'%}
       <div class="row mb-5">
 
         <div class="member d-flex align-items-start">
@@ -61,13 +61,8 @@ View Appointments
             <div class="btn-width">
               <form id="cancel-appointment-form" action="{{ url_for('cancel_appointment') }}" method="post">
                 <input type="hidden" name="appointmentid" value="{{ i[0] }}">
-                <button type="button" class="btn btn-dark mt-3" onclick="cancelAppointment()">Cancel</button>
+                <button type="submit" class="btn btn-dark mt-3">Cancel</button>
               </form>
-            </div>
-            <div id="confirmation-popup" style="display: none;">
-              <p>Are you sure you want to cancel this appointment?</p>
-              <button id="confirm-button" class="btn btn-danger mb-2">Yes, cancel</button>
-              <button id="cancel-button" class="btn btn-secondary">No, go back</button>
             </div>
 
           </div>
