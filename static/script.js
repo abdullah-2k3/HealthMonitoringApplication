@@ -106,14 +106,13 @@ function ToggleNav() {
 
 function openNav() {
   document.getElementById("mySidebar").style.width = "200px";
-  document.getElementById("mySidebar").style.padding = "20px";
+  document.getElementById("mySidebar").style.padding = "10px";
   document.querySelector(".sidebar-image").style.display = "block";
   document.getElementById("my_header").style.marginLeft = "0px";
   document.getElementById("main-content").style.marginLeft = "0px";
 
   var sidebarButtons = document.querySelectorAll(".sidebar button");
   sidebarButtons.forEach(function (button) {
-    button.style.paddingleft = "10px";
     button.style.display = "block";
   });
 }
@@ -140,6 +139,16 @@ function getDate() {
   var formattedDate = year + "-" + month + "-" + day;
 
   return formattedDate;
+}
+
+function getTime() {
+  const currentDate = new Date();
+
+  const hours = String(currentDate.getHours()).padStart(2, "0");
+  const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+  const formattedTime = `${hours}:${minutes}`;
+
+  return formattedTime;
 }
 
 //----Notification Count Badge-----
@@ -178,7 +187,6 @@ document
       badge.remove();
     }
 
-    // Send an AJAX request to reset the notification count
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/reset_notification_count", true);
     xhr.setRequestHeader("Content-Type", "application/json");

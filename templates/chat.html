@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Chat
+{% endblock %}
+
+{% block styles %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #e5e5e5;
+    }
+
+    @media only screen and (max-width: 500px) {
+        #chat {
+            width: 90%;
+            /* Adjust as needed */
+        }
+    }
+
+    #chat {
+        width: 800px;
+    }
+
+    #chat input {
+        width: 99%;
+    }
+
+    ul {
+        height: 470px;
+        background-color: #cccccc;
+        color: #00000a;
+        overflow-y: scroll;
+    }
+
+    li {
+        list-style: none;
+        padding: 5px 0px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+</style>
+{% endblock %}
+
+
+{% block header %}
+Chat
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+        integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+        crossorigin="anonymous"></script>
+
+
+    <div id="chat" style="display:block;">
+
+        <ul id="chat-messages" class="rounded">
+        </ul>
+        <input type="text" id="message" placeholder="Type a Message" class="rounded">
+    </div>
+    <script>
+        const socket = io({ autoConnect: false });
+
+        socket.connect();
+
+        const username = "{{ username }}";
+        socket.on("connect", function () {
+            socket.emit("user_join", username);
+        })
+
+        document.getElementById("message").addEventListener("keyup", function (event) {
+            if (event.key == "Enter") {
+                let message = document.getElementById("message").value;
+                socket.emit("new_message", message);
+                document.getElementById("message").value = "";
+            }
+        })
+
+        socket.on("chat", function (data) {
+            let ul = document.getElementById("chat-messages");
+            let li = document.createElement("li");
+            li.appendChild(document.createTextNode(data["username"] + ": " + data["message"]));
+            ul.appendChild(li);
+            ul.scrolltop = ul.scrollHeight;
+        })
+    </script>
+
+</div>
+{% endblock %}

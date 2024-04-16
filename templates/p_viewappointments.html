@@ -59,7 +59,7 @@ View Appointments
             <p> <b>Status: </b>{{ i[8] }}</p>
 
             <div class="btn-width">
-              <form id="cancel-appointment-form" action="{{ url_for('cancel_appointment') }}" method="post">
+              <form id="cancel-appointment-form" action="/'cancel_appointment'" method="post">
                 <input type="hidden" name="appointmentid" value="{{ i[0] }}">
                 <button type="submit" class="btn btn-dark mt-3">Cancel</button>
               </form>

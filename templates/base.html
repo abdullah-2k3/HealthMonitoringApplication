@@ -93,6 +93,11 @@
             Profile
         </button>
 
+        <button onclick="loadPage('p_health_records.html', 'p_health_records', '/health_records')">
+            <i class="fas fa-file-alt"></i>
+            Health Records
+        </button>
+
         <button onclick="loadPage('p_doctors.html', 'Doctors', '/doctors')">
             <i class="fas fa-user-md"></i>
             Doctors
@@ -116,6 +121,11 @@
         <button onclick="loadPage('faq.html', 'FAQs', '/faq')">
             <i class="fas fa-question-circle"></i>
             FAQs
+        </button>
+
+        <button onclick="loadPage('chat.html', 'chat', '/chat')">
+            <i class="fas fa-comments"></i>
+            Chat
         </button>
 
         {%elif role == "doctor" %}
@@ -142,6 +152,12 @@
         <button onclick="loadPage('suggestions.html', 'Suggestions', '/suggestions')">
             <i class="fas fa-file-medical-alt"></i>
             Suggestions
+        </button>
+
+
+        <button onclick="loadPage('chat.html', 'chat', '/chat')">
+            <i class="fas fa-comments"></i>
+            Chat
         </button>
 
         {%elif role == "admin" %}
@@ -174,6 +190,7 @@
             <i class="fas fa-calendar-plus"></i>
             Appointments
         </button>
+
         {%endif%}
     </div>
 
@@ -187,6 +204,7 @@
     </div>
 
     <script src="./static/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
 
     <script src="./static/assets/vendor/purecounter/purecounter_vanilla.js"></script>
     <script src="./static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

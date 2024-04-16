@@ -56,16 +56,14 @@ Appointments
                         <p class="mb-4"> <b>Location:</b> {{ i[3] }}</p>
                         <p> <b>Status: </b>{{ i[8] }}</p>
                         <div class="btn-width">
-                            <form id="cancel-appointment-form" action="{{ url_for('cancel_appointment') }}"
-                                method="post">
+                            <form id="cancel-appointment-form" action="/cancel_appointment" method="post">
                                 <input type="hidden" name="appointmentid" value="{{ i[0] }}">
                                 <button type="submit" class=" btn btn-danger mt-3">Cancel</button>
                             </form>
                         </div>
-                        {% if i[8] != 'confirmed'%}
+                        {% if i[8] != 'confirmed' %}
                         <div class="btn-width">
-                            <form id="confirm-appointment-form" action="{{ url_for('confirm_appointment') }}"
-                                method="post">
+                            <form id="confirm-appointment-form" action="/confirm_appointment" method="post">
                                 <input type="hidden" name="appointmentid" value="{{ i[0] }}">
                                 <button type="submit" class=" btn btn-dark mt-3">Confirm</button>
                             </form>

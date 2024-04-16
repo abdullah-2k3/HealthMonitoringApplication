@@ -38,7 +38,6 @@ Request Appointment
           <div class="col-md-4 form-group">
             <label for="date">Appointment Date: *</label>
             <input type="date" class="form-control" id="date" name="date" required>
-            <span class="required"></span>
           </div>
           <div class="col-md-4 form-group">
             <label for="doctor">Doctor: *</label>
@@ -48,7 +47,6 @@ Request Appointment
               <option value="{{ doctor[1] }}">{{ doctor[1] }}</option>
               {% endfor %}
             </select>
-            <span class="required"></span>
           </div>
           <div class="col-md-4 form-group">
             <label for="location">Location: *</label>
@@ -58,19 +56,16 @@ Request Appointment
               <option value="{{ row[4] }}">{{ row[4] }}</option>
               {% endfor %}
             </select>
-            <span class="required"></span>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 form-group">
             <label for="time">Appointment Time: *</label>
             <input type="time" class="form-control" id="time" name="time" required>
-            <span class="required"></span>
           </div>
         </div>
         <div class="form-group mt-3">
           <textarea class="form-control" name="details" rows="2" placeholder="Details (Optional)"></textarea>
-          <span class="required"></span>
         </div>
         <br>
         <div class="text-center">
@@ -79,5 +74,4 @@ Request Appointment
       </form>
     </div>
   </section><!-- End Appointment Section -->
-  <script src="./static/script.js"></script>
   {% endblock %}
