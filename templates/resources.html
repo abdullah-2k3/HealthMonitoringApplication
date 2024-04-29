@@ -10,38 +10,35 @@ Resources
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ category }}">
-        {{ message }}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<section class=" p-4 rounded shadow mb-2 section-bg">
+    <div class=" section-title section">
+        <h2>Expert Opinions</h2>
     </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <section class="container">
-        <div class=" section-title ">
-            <h2>Expert Opinions</h2>
-        </div>
-        <section class=" p-4 rounded shadow mb-2">
-            {% for i in users%}
-            <div class="row mb-2">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="mb-4">
-                            <h5>{{i[2]}}</h5>
-                            <strong class="ml-2" style="color:cadetblue">{{i[1]}}</strong>
-                            <p class="ml-3"> {{i[3]}}</p>
-                        </div>
-                    </div>
+    {% for i in users%}
+    <div class="row mb-2">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="mb-4">
+                    <h5>{{i[2]}}</h5>
+                    <strong class="ml-2" style="color:cadetblue">{{i[1]}}</strong>
+                    <p class="ml-3"> {{i[3]}}</p>
                 </div>
             </div>
-            {%endfor%}
-        </section>
-    </section>
+        </div>
+    </div>
+    {%endfor%}
+</section>
 
 
-</div>
 {% endblock %}

@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Data Visualization
+{% endblock %}
+
+{% block header %}
+Data Visualization
+{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="row mt-4" style="text-align: center;">
+    <div class="col-lg-6">
+        <h4>Height to Weight</h4>
+        <canvas class="chart" id="height_weight_chart" style="width: 200px; height: 100px;"></canvas>
+    </div>
+    <div class="col-lg-6">
+        <h4>SleepTime</h4>
+        <canvas class="chart" id="sleep_chart" style="width: 200px; height: 100px;"></canvas>
+    </div>
+</div>
+
+<div class="row mt-4" style="text-align: center;">
+    <div class="col-lg-6">
+        <h4>Body Temprature</h4>
+        <canvas class="chart" id="temprature_chart" style="width: 200px; height: 100px;"></canvas>
+    </div>
+    <div class="col-lg-6">
+        <h4>Blood Pressure</h4>
+        <canvas class="chart" id="heartrate_chart" style="width: 200px; height: 100px;"></canvas>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    function height_weight_chart() {
+        const data = JSON.parse('{{ chart_data | tojson | safe }}');
+
+        const weights = data.weight;
+        const heights = data.height;
+
+        const ctx = document.getElementById('height_weight_chart').getContext('2d');
+        const height_weight_chart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Height vs Weight',
+                    data: heights.map((height, index) => ({ x: height, y: weights[index] })),
+                    backgroundColor: 'blue',
+                    borderColor: 'aqua',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Height'
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        title: {
+                            display: true,
+                            text: 'Weight'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    function sleep_chart() {
+        const data = JSON.parse('{{ chart_data | tojson | safe }}');
+
+        const sleeptime = data.sleeptime;
+        const dates = data.datetime.map(timestamp => {
+            const dateObj = new Date(timestamp);
+            return dateObj.toISOString().split('T')[0]; // Extract only the date part
+        });
+
+
+        const ctx = document.getElementById('sleep_chart').getContext('2d');
+        const sleepChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'SleepTime',
+                    data: sleeptime,
+                    backgroundColor: 'navy',
+                    borderColor: 'blue',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Sleeptime (hrs)'
+                        },
+                        ticks: {
+                            min: 0, // Set minimum value to 0
+                            max: Math.ceil(Math.max(...sleeptime)), // Set maximum value
+                            stepSize: 1 // Set the step size to 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    function temprature_chart() {
+        const data = JSON.parse('{{ chart_data | tojson | safe }}');
+
+        const temprature = data.temprature;
+        const dates = data.datetime.map(timestamp => {
+            const dateObj = new Date(timestamp);
+            return dateObj.toISOString().split('T')[0]; // Extract only the date part
+        });
+
+
+        const ctx = document.getElementById('temprature_chart').getContext('2d');
+        const sleepChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Temprature',
+                    data: temprature,
+                    backgroundColor: 'navy',
+                    borderColor: 'blue',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'temprature (F)'
+                        },
+                        ticks: {
+                            min: 70,
+                            max: Math.ceil(Math.max(...temprature)), // Set maximum value
+                            stepSize: 1 // Set the step size to 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function heartrate_chart() {
+        const data = JSON.parse('{{ chart_data | tojson | safe }}');
+
+        const heartrate = data.heartrate;
+        const dates = data.datetime.map(timestamp => {
+            const dateObj = new Date(timestamp);
+            return dateObj.toISOString().split('T')[0];
+        });
+
+        const ctx = document.getElementById('heartrate_chart').getContext('2d');
+        const heartrate_chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'heartrate',
+                    data: heartrate,
+                    backgroundColor: 'navy',
+                    borderColor: 'blue',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'heartrate'
+                        },
+                        ticks: {
+                            min: 50,
+                            max: Math.ceil(Math.max(...heartrate)), // Set maximum value
+                            stepSize: 1 // Set the step size to 1
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
+
+
+    height_weight_chart();
+    sleep_chart();
+    temprature_chart();
+    heartrate_chart();
+
+</script>
+
+{% endblock %}

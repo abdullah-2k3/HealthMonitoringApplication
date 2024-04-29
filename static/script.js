@@ -10,7 +10,7 @@ function calculateBMI(height, weight) {
 }
 
 // Function to load page
-function loadPage(page, pageTitle, pageUrl) {
+function loadPage(pageUrl) {
   window.location.href = pageUrl;
 }
 
@@ -105,30 +105,29 @@ function ToggleNav() {
 }
 
 function openNav() {
+  var sidebarButtons = document.querySelectorAll(".sidebar button");
+  sidebarButtons.forEach(function (button) {
+    button.style.paddingleft = "10px";
+    button.style.display = "block";
+  });
   document.getElementById("mySidebar").style.width = "200px";
   document.getElementById("mySidebar").style.padding = "10px";
   document.querySelector(".sidebar-image").style.display = "block";
   document.getElementById("my_header").style.marginLeft = "0px";
-  document.getElementById("main-content").style.marginLeft = "0px";
-
-  var sidebarButtons = document.querySelectorAll(".sidebar button");
-  sidebarButtons.forEach(function (button) {
-    button.style.display = "block";
-  });
+  document.getElementById("main-content").style.marginLeft = "210px";
 }
 
 function closeNav() {
-  document.getElementById("my_header").style.marginLeft = "-200px";
-  document.getElementById("mySidebar").style.width = "0px";
-  document.getElementById("mySidebar").style.padding = "0";
-  document.querySelector(".sidebar-image").style.display = "none";
-  document.getElementById("main-content").style.marginLeft = "-205px";
-
   var sidebarButtons = document.querySelectorAll(".sidebar button");
   sidebarButtons.forEach(function (button) {
     button.style.paddingleft = "0px";
     button.style.display = "none";
   });
+  document.getElementById("main-content").style.marginLeft = "20px";
+  document.getElementById("my_header").style.marginLeft = "-200px";
+  document.getElementById("mySidebar").style.width = "0px";
+  document.getElementById("mySidebar").style.padding = "0";
+  document.querySelector(".sidebar-image").style.display = "none";
 }
 
 function getDate() {

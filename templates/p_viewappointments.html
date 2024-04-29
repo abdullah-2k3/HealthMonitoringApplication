@@ -12,68 +12,66 @@ View Appointments
 
 
 {% block content %}
-<div class="main-content">
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, message in messages %}
-  <div class="alert alert-{{ category }}">
-    {{ message }}
-  </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 
-  <section id="doctors" class="doctors">
-    <div class="container">
+<section id="doctors" class="doctors">
+  <div class="container">
 
-      <div class="section-title">
-        <h2>Your Appointments</h2>
-        <p>Note that the canceled appointments are not shown on this page, you can see them in the notifications. For
-          more
-          details, you can reach out the admin.</p>
-      </div>
+    <div class="section-title">
+      <h2>Your Appointments</h2>
+      <p>Note that the canceled appointments are not shown on this page, you can see them in the notifications. For
+        more
+        details, you can reach out the admin.</p>
+    </div>
 
-      {% for i in data %}
-      {% if i[8] != "canceled" and i[8] != 'not confirmed'%}
-      <div class="row mb-5">
+    {% for i in data %}
+    {% if i[8] != "canceled" and i[8] != 'not confirmed'%}
+    <div class="row mb-5">
 
-        <div class="member d-flex align-items-start">
-          <div class="pic"><img src="./static/app.png" class="img-fluid" alt=""></div>
-          <div class="member-info col">
-            <p class="mb-4"> <b>Appointment ID:</b> {{ i[0] }}</p>
-            <p class="mb-4"> <b>Date:</b> {{ i[4] }}</p>
-            <p class="mb-4"> <b>Patient ID:</b> {{ i[1] }}</p>
-            <div class="social"> <a href=""><i class="ri-twitter-fill"></i></a> <a href=""><i
-                  class="ri-facebook-fill"></i></a> <a href=""><i class="ri-instagram-fill"></i></a> <a href=""> <i
-                  class="ri-linkedin-box-fill"></i> </a> </div>
-          </div>
-          <div class="member-info col">
-            <p class="mb-4"> <b>Doctor ID: </b>{{ i[2] }}</p>
-            <p class="mb-4"> <b>Time: </b>{{ i[5][:5] }}
-            <p class="mb-4"> <b>Details: </b>{{i[7]}}
-          </div>
-          <div class="member-info col">
-            <p class="mb-4"> <b>Charges:</b> {{ i[6] }}</p>
-            <p class="mb-4"> <b>Location:</b> {{ i[3] }}</p>
-            <p> <b>Status: </b>{{ i[8] }}</p>
+      <div class="member d-flex align-items-start">
+        <div class="pic"><img src="./static/app.png" class="img-fluid" alt=""></div>
+        <div class="member-info col">
+          <p class="mb-4"> <b>Appointment ID:</b> {{ i[0] }}</p>
+          <p class="mb-4"> <b>Date:</b> {{ i[4] }}</p>
+          <p class="mb-4"> <b>Patient ID:</b> {{ i[1] }}</p>
+          <div class="social"> <a href=""><i class="ri-twitter-fill"></i></a> <a href=""><i
+                class="ri-facebook-fill"></i></a> <a href=""><i class="ri-instagram-fill"></i></a> <a href=""> <i
+                class="ri-linkedin-box-fill"></i> </a> </div>
+        </div>
+        <div class="member-info col">
+          <p class="mb-4"> <b>Doctor ID: </b>{{ i[2] }}</p>
+          <p class="mb-4"> <b>Time: </b>{{ i[5][:5] }}
+          <p class="mb-4"> <b>Details: </b>{{i[7]}}
+        </div>
+        <div class="member-info col">
+          <p class="mb-4"> <b>Charges:</b> {{ i[6] }}</p>
+          <p class="mb-4"> <b>Location:</b> {{ i[3] }}</p>
+          <p> <b>Status: </b>{{ i[8] }}</p>
 
-            <div class="btn-width">
-              <form id="cancel-appointment-form" action="/'cancel_appointment'" method="post">
-                <input type="hidden" name="appointmentid" value="{{ i[0] }}">
-                <button type="submit" class="btn btn-dark mt-3">Cancel</button>
-              </form>
-            </div>
-
+          <div class="btn-width">
+            <form id="cancel-appointment-form" action="/cancel_appointment" method="post">
+              <input type="hidden" name="appointmentid" value="{{ i[0] }}">
+              <button type="submit" class="btn btn-dark mt-3">Cancel</button>
+            </form>
           </div>
 
         </div>
 
       </div>
-      {%endif%}
-      {% endfor %}
+
     </div>
-  </section>
-</div>
+    {%endif%}
+    {% endfor %}
+  </div>
+</section>
 
 {% endblock %}

@@ -10,46 +10,43 @@ Suggestions
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ category }}">
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 
-    <section class=" p-4 rounded shadow mb-2" style="background: #ddddde;">
-        {% for i in users%}
-        <div class="row mb-2">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h5>{{i[2]}}</h5>
-                    <div class="mb-4"><strong style="color:cadetblue">{{i[1]}}</strong>
-                        <p class="ml-3 "> {{i[3]}}</p>
-                    </div>
+<section class=" p-4 rounded shadow mb-2" style="background: #ddddde;">
+    {% for i in users%}
+    <div class="row mb-2">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h5>{{i[2]}}</h5>
+                <div class="mb-4"><strong style="color:cadetblue">{{i[1]}}</strong>
+                    <p class="ml-3 "> {{i[3]}}</p>
                 </div>
             </div>
         </div>
-        {%endfor%}
-    </section>
+    </div>
+    {%endfor%}
+</section>
 
 
-    <form action="/post_suggestion" method="post" style="position: fixed; bottom:0px; width: 80%; align-self: center;">
-        <input type="hidden" id="action" name="action" value="add">
-        <div class="form-group mt-3 ml-3 d-flex">
-            <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject"
-                style="width: 30%;">
-            <textarea class="form-control" name="message" rows="1" placeholder="Message" required></textarea>
-            <div class="d-flex align-items-center justify-content-center">
-                &nbsp;&nbsp;&nbsp;<button type="submit" class="btn bg-dark text-light">Post</button>
-            </div>
+<form action="/post_suggestion" method="post" style="position: fixed; bottom:0px; width: 80%; align-self: center;">
+    <input type="hidden" id="action" name="action" value="add">
+    <div class="form-group mt-3 ml-3 d-flex">
+        <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject" style="width: 30%;">
+        <textarea class="form-control" name="message" rows="1" placeholder="Message" required></textarea>
+        <div class="d-flex align-items-center justify-content-center">
+            &nbsp;&nbsp;&nbsp;<button type="submit" class="btn bg-dark text-light">Post</button>
         </div>
+    </div>
 
-    </form>
+</form>
 
-</div>
 {% endblock %}

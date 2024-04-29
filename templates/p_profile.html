@@ -9,120 +9,112 @@ Profile
 {% endblock %}
 
 {% block styles %}
-<style>
-  .main-content {
-    font-size: 20px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
-  }
-</style>
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, message in messages %}
-  <div class="alert alert-{{ category }}">
-    {{ message }}
-  </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-  <section class="p-4 rounded shadow mb-4 section-bg">
-    <div class="container mt-3">
-      <h2 class="mb-5">User Details</h2>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-4"><strong class="mr-4">User ID:</strong> {{ user[0][0] }}</div>
-            <div class="mb-4"><strong class="mr-2">Username:</strong> {{ user[0][1] }}</div>
-            <div class="form-inline mb-4">
-              <strong>Password: </strong>
-              <input type="password" id="password" name="password" value="{{ user[0][2] }}"
-                class="form-control ml-2 mr-2">
-              <input type="checkbox" onclick="showPassword()">
-              <label for="showPassword" class="ml-2">Show</label>
-            </div>
-            <div class="mb-4"><strong class="mr-4">Email:</strong> {{ user[0][4] }}</div>
-            <div class="mb-4"><strong class="mr-3">Contact:</strong> {{ user[0][5] }}</div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-4"><strong class="mr-4">Full Name:</strong> {{ patient[0][1] }}</div>
-            <div class="mb-4"><strong class="mr-2">Gender:</strong> {{ patient[0][2] }}</div>
-            <div class="mb-4"><strong class="mr-2">Age:</strong> {{ patient[0][3] }}</div>
-            <div class="mb-4"><strong class="mr-4">Health Status:</strong>{{ patient[0][4] }}</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 
+<section class="p-4 rounded shadow mb-4 mr-3  section-bg">
+  <div class="container mt-3">
+    <h2 class="mb-5">User Details</h2>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-4"><strong class="mr-4">User ID:</strong> {{ user[0][0] }}</div>
+          <div class="mb-4"><strong class="mr-2">Username:</strong> {{ user[0][1] }}</div>
+          <div class="form-inline mb-4">
+            <strong>Password: </strong>
+            <input type="password" id="password" name="password" value="{{ user[0][2] }}"
+              class="form-control ml-2 mr-2">
+            <input type="checkbox" onclick="showPassword()">
+            <label for="showPassword" class="ml-2">Show</label>
           </div>
+          <div class="mb-4"><strong class="mr-4">Email:</strong> {{ user[0][4] }}</div>
+          <div class="mb-4"><strong class="mr-3">Contact:</strong> {{ user[0][5] }}</div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-4"><strong class="mr-4">Full Name:</strong> {{ patient[0][1] }}</div>
+          <div class="mb-4"><strong class="mr-2">Gender:</strong> {{ patient[0][2] }}</div>
+          <div class="mb-4"><strong class="mr-2">Age:</strong> {{ patient[0][3] }}</div>
+          <div class="mb-4"><strong class="mr-4">Health Status:</strong>{{ patient[0][4] }}</div>
+
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
 
-  <section class=" p-4 rounded shadow mb-4 section-bg">
-    <h3 class="mb-4">Edit Options</h3>
-    <form id="actionForm" action="/update_patient_profile" method="post">
-      <input type="hidden" id="action" name="action" value="update">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username">
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password">
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="password" id="confirm-pass" name="confirm-pass" class="form-control"
-              placeholder="Confirm Password">
-          </div>
+<section class=" p-4 rounded shadow mb-4 section-bg">
+  <h3 class="mb-4">Edit Options</h3>
+  <form id="actionForm" action="/update_patient_profile" method="post">
+    <input type="hidden" id="action" name="action" value="update">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="text" id="username" name="username" class="form-control" placeholder="Username">
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="email" id="email" name="email" class="form-control" placeholder="Email">
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="text" id="contact" name="contact" class="form-control" placeholder="Contact">
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="text" id="name" name="name" class="form-control" placeholder="Name">
-          </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="password" id="password" name="password" class="form-control" placeholder="Password">
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="text" id="gender" name="gender" class="form-control" placeholder="Gender">
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="text" id="age" name="age" class="form-control" placeholder="Age">
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="text" id="health" name="health" class="form-control" placeholder="Health Status">
-          </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="password" id="confirm-pass" name="confirm-pass" class="form-control"
+            placeholder="Confirm Password">
         </div>
       </div>
-      <div class="btn-group">
-        <button type="button" class="btn btn-dark mt-3" onclick="setAction('update')">Update
-          Profile</button>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+        </div>
       </div>
-    </form>
-  </section>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="text" id="contact" name="contact" class="form-control" placeholder="Contact">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="text" id="name" name="name" class="form-control" placeholder="Name">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="text" id="gender" name="gender" class="form-control" placeholder="Gender">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="text" id="age" name="age" class="form-control" placeholder="Age">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input type="text" id="health" name="health" class="form-control" placeholder="Health Status">
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-dark mt-3" onclick="setAction('update')">Update
+        Profile</button>
+    </div>
+  </form>
+</section>
 
-
-</div>
 {% endblock %}

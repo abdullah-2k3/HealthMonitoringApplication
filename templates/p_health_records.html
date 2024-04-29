@@ -10,11 +10,6 @@ Health Records
 
 {% block styles %}
 <style>
-    .main-content {
-        font-size: 18px;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
-    }
-
     .table {
         border-collapse: collapse;
     }
@@ -31,128 +26,125 @@ Health Records
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ category }}">
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <section class="section-bg p-4 rounded shadow mb-4">
-        <h2 class="mb-3">Health Records</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    {% for column in columns %}
-                    {% if column != 'record_id' and column != 'patient_id' and column != 'notes'%}
-                    <th>{{ column }}</th>
-                    {% endif %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data %}
-                <tr>
-                    {% for value in row[2:-2] | list + [row[-1]] %}
-                    <td>{{ value }}</td>
-                    {% endfor %}
-
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </section>
-
-
-
-    <section class=" p-4 rounded shadow mb-4 section-bg">
-        <h3 class="mb-4">Add Health Data</h3>
-        <form id="actionForm" action="/add_patient_health_data" method="post">
-            <input type="hidden" id="action" name="action" value="add">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="datetime-local" id="datetime" name="datetime" class="form-control" required>
-                        <span class="required"></span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="text" id="bloodpressure" name="bloodpressure" class="form-control"
-                            placeholder="blood pressure">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="number" id="temprature" name="temprature" class="form-control"
-                            placeholder="Temprature(F)">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="number" id="weight" name="weight" class="form-control" placeholder="weight(lbs)">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="number" id="height" name="height" class="form-control"
-                            placeholder="height(inches)">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="text" id="symptoms" name="symptoms" class="form-control" placeholder="Symptoms">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="text" id="diagnosis" name="diagnosis" class="form-control" placeholder="Diagnosis">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="text" id="treatment" name="treatment" class="form-control" placeholder="Treatment">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="text" id="medications" name="medications" class="form-control"
-                            placeholder="Medications">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="text" id="notes" name="notes" class="form-control" placeholder="Notes">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="number" id="sleeptime" name="sleeptime" class="form-control"
-                            placeholder="sleeptime(hrs)">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <input type="int" id="heartrate" name="heartrate" class="form-control" placeholder="heart rate">
-                    </div>
-                </div>
-            </div>
-            <div class="btn-group">
-                <button type="submit" class="btn btn-dark mt-3">Add Data</button>
-            </div>
-        </form>
-    </section>
-
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
 </div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<section class="section-bg p-4 rounded shadow mb-4">
+    <h2 class="mb-3">Health Records</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                {% for column in columns %}
+                {% if column != 'record_id' and column != 'patient_id' and column != 'notes'%}
+                <th>{{ column }}</th>
+                {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                {% for value in row[2:-2] | list + [row[-1]] %}
+                <td>{{ value }}</td>
+                {% endfor %}
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+
+
+<section class=" p-4 rounded shadow mb-4 section-bg">
+    <h3 class="mb-4">Add Health Data</h3>
+    <form id="actionForm" action="/add_patient_health_data" method="post">
+        <input type="hidden" id="action" name="action" value="add">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="datetime-local" id="datetime" name="datetime" class="form-control" required>
+                    <span class="required"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" id="bloodpressure" name="bloodpressure" class="form-control"
+                        placeholder="blood pressure">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="number" id="temprature" name="temprature" class="form-control"
+                        placeholder="Temprature(F)">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="number" id="weight" name="weight" class="form-control" placeholder="weight(lbs)">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="number" id="height" name="height" class="form-control" placeholder="height(inches)">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" id="symptoms" name="symptoms" class="form-control" placeholder="Symptoms">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" id="diagnosis" name="diagnosis" class="form-control" placeholder="Diagnosis">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" id="treatment" name="treatment" class="form-control" placeholder="Treatment">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" id="medications" name="medications" class="form-control"
+                        placeholder="Medications">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" id="notes" name="notes" class="form-control" placeholder="Notes">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="number" id="sleeptime" name="sleeptime" class="form-control"
+                        placeholder="sleeptime(hrs)">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="int" id="heartrate" name="heartrate" class="form-control" placeholder="heart rate">
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-dark mt-3">Add Data</button>
+        </div>
+    </form>
+</section>
+
+
 {% endblock %}

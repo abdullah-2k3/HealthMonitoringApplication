@@ -9,132 +9,126 @@ Dashboard
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, message in messages %}
-  <div class="alert alert-{{ category }}">
-    {{ message }}
-  </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-
-  <section id="counts" class="counts section-bg!">
-    <div class="container">
-
-      <div class="section-title">
-        <h2>Health Summary </h2>
-      </div>
-
-      <h3 class="ml-5">Recorded: {{(data[0][2])}}</h3>
-      <div class="row mt-5 ">
-
-        <div class="col-lg-3 col-md-6 mr-5 ml-5 ">
-          <div class="count-box">
-            <span>{{data[0][7]}}</span>
-            <p>Height (inches)</p>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mr-5 ml-5 ">
-          <div class="count-box">
-            <span>{{data[0][4]}}</span>
-            <p>Weight (lbs)</p>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mr-5 ml-5 ">
-          <div class="count-box">
-            <span>{{data[0][3]}}</span>
-            <p>Blood Pressure</p>
-          </div>
-        </div>
-
-
-        <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
-          <div class="count-box">
-            <span>{{data[0][4]}}</span>
-            <p>Heart Rate</p>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
-          <div class="count-box">
-            <span>{{data[0][13]}}</span>
-            <p>Sleep Time(Hrs)</p>
-          </div>
-        </div>
-
-
-        <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
-          <div class="count-box">
-            <span>{{data[0][5]}}</span>
-            <p>Body Temprature (F)</p>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-
-  <section id="services" class="services mt-5">
-    <div class="container">
-
-      <div class="section-title">
-        <h2>Health Reports</h2>
-
-      </div>
-
-      <div class="row">
-        <div class="col-lg-4 mt-3">
-          <div class="icon-box">
-            <div class="icon"><i class="fas fa-heartbeat"></i></div>
-            <h4>Symptoms</h4>
-            <p>{{data[0][8]}}</p>
-          </div>
-        </div>
-
-        <div class="col-lg-4 mt-3">
-          <div class="icon-box">
-            <div class="icon"><i class="fas fa-pills"></i></div>
-            <h4>Diagnosis</h4>
-            <p>{{data[0][9]}}</p>
-          </div>
-        </div>
-
-        <div class="col-lg-4 mt-3">
-          <div class="icon-box">
-            <div class="icon"><i class="fas fa-hospital-user"></i></div>
-            <h4>Treatment</h4>
-            <p>{{data[0][10]}}</p>
-          </div>
-        </div>
-
-        <div class="col-lg-4 mt-3">
-          <div class="icon-box">
-            <div class="icon"><i class="fas fa-dna"></i></div>
-            <h4>Medication</h4>
-            <p>{{data[0][11]}}</p>
-          </div>
-        </div>
-
-        <div class="col-lg-4 mt-3">
-          <div class="icon-box">
-            <div class="icon"><i class="fas fa-hospital-user"></i></div>
-            <h4>Notes</h4>
-            <p>{{data[0][12]}}</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+  {{ message }}
 </div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<section id="counts" class="counts section-bg! mb-4">
+  <div class="section-title">
+    <h2>Health Summary </h2>
+  </div>
+
+  <h3 class="ml-5">Recorded: {{(data[0][2])}}</h3>
+  <div class="row">
+
+    <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5 ">
+      <div class="count-box">
+        <span>{{data[0][7]}}</span>
+        <p>Height (inches)</p>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5 ">
+      <div class="count-box">
+        <span>{{data[0][6]}}</span>
+        <p>Weight (lbs)</p>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5 ">
+      <div class="count-box">
+        <span>{{data[0][3]}}</span>
+        <p>Blood Pressure</p>
+      </div>
+    </div>
+
+
+    <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
+      <div class="count-box">
+        <span>{{data[0][4]}}</span>
+        <p>Heart Rate</p>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
+      <div class="count-box">
+        <span>{{data[0][13]}}</span>
+        <p>Sleep Time(Hrs)</p>
+      </div>
+    </div>
+
+
+    <div class="col-lg-3 col-md-6 mt-5 mr-5 ml-5">
+      <div class="count-box">
+        <span>{{data[0][5]}}</span>
+        <p>Body Temprature (F)</p>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="services" class="services mt-5 section-bg">
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Health Reports</h2>
+
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4 mt-3">
+        <div class="icon-box">
+          <div class="icon"><i class="fas fa-heartbeat"></i></div>
+          <h4>Symptoms</h4>
+          <p>{{data[0][8]}}</p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mt-3">
+        <div class="icon-box">
+          <div class="icon"><i class="fas fa-pills"></i></div>
+          <h4>Diagnosis</h4>
+          <p>{{data[0][9]}}</p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mt-3">
+        <div class="icon-box">
+          <div class="icon"><i class="fas fa-hospital-user"></i></div>
+          <h4>Treatment</h4>
+          <p>{{data[0][10]}}</p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mt-3">
+        <div class="icon-box">
+          <div class="icon"><i class="fas fa-dna"></i></div>
+          <h4>Medication</h4>
+          <p>{{data[0][11]}}</p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mt-3">
+        <div class="icon-box">
+          <div class="icon"><i class="fas fa-hospital-user"></i></div>
+          <h4>Notes</h4>
+          <p>{{data[0][12]}}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 
 {% endblock %}

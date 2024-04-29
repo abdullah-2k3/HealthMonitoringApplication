@@ -6,38 +6,34 @@
 
 {% block content %}
 
-<div class="main-content ">
+<section id="doctors" class="doctors ">
+    <div class="container ">
 
-
-    <section id="doctors" class="doctors ">
-        <div class="container ">
-
-            <div class="section-title">
-                <h2>Doctors</h2>
-                <p>On this page, you can view a list of all the doctors who are available for appointments. You can
-                    browse through their profiles, read their bios, and see their specialties to help you make an
-                    informed decision about which doctor to choose for your appointment.</p>
-            </div>
-
-            <div class="row">
-
-                {% for doctor in doctors %}
-
-                <div class="col-lg-6">
-                    <div class="member d-flex align-items-start">
-                        <div class="pic"><img src="./static/user-logo.png" class="img-fluid" alt=""></div>
-                        <div class="member-info">
-                            <h4>{{ doctor[1] }}</h4> <span>{{ doctor[2] }} {{ doctor[3] }}</span>
-                            <p>{{ doctor[4] }} </p>
-                            <p>Ratings: 80%</p>
-                            <div class="social"> <a href=""><i class="ri-twitter-fill"></i></a> <a href=""><i
-                                        class="ri-facebook-fill"></i></a> <a href=""><i
-                                        class="ri-instagram-fill"></i></a> <a href=""> <i
-                                        class="ri-linkedin-box-fill"></i> </a> </div>
-                        </div>
-                    </div>
-                </div> {% endfor %}
-            </div>
+        <div class="section-title">
+            <h2>Doctors</h2>
+            <p>On this page, you can view a list of all the doctors who are available for appointments. You can
+                browse through their profiles, read their bios, and see their specialties to help you make an
+                informed decision about which doctor to choose for your appointment.</p>
         </div>
-    </section>
-</div> {% endblock %}
+
+        <div class="row">
+
+            {% for doctor in doctors %}
+
+            <div class="col-lg-6">
+                <div class="member d-flex align-items-start">
+                    <div class="pic"><img src="./static/user-logo.png" class="img-fluid" alt=""></div>
+                    <div class="member-info">
+                        <h4>{{ doctor[1] }}</h4> <span>{{ doctor[2] }} {{ doctor[3] }}</span>
+                        <p>{{ doctor[4] }} </p>
+                        <p>Ratings: 80%</p>
+                        <div class="social"> <a href=""><i class="ri-twitter-fill"></i></a> <a href=""><i
+                                    class="ri-facebook-fill"></i></a> <a href=""><i class="ri-instagram-fill"></i></a>
+                            <a href=""> <i class="ri-linkedin-box-fill"></i> </a> </div>
+                    </div>
+                </div>
+            </div> {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

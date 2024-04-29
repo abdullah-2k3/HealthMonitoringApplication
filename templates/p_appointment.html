@@ -10,68 +10,68 @@ Request Appointment
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
-  <!-- ======= Appointment Section ======= -->
-  <section id="appointment" class="appointment section-bg">
-    <div class="container">
 
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-      {% for category, message in messages %}
-      <div class="alert alert-{{ category }}">
-        {{ message }}
-      </div>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
+<!-- ======= Appointment Section ======= -->
+<section id="appointment" class="appointment section-bg">
+  <div class="container">
 
-      <div class="section-title">
-        <h2 class="mb-3">Make an Appointment</h2>
-        <p>Ready to schedule your appointment? Use the form below to select your preferred date and time, and we'll take
-          care of the rest. We'll reach out to confirm your appointment shortly. Thank you for choosing us for your
-          healthcare needs!</p>
-      </div>
-
-      <form id="actionForm" action="/handle_appointment_request" method="post">
-        <input type="hidden" id="action" name="action" value="add">
-        <div class="row">
-          <div class="col-md-4 form-group">
-            <label for="date">Appointment Date: *</label>
-            <input type="date" class="form-control" id="date" name="date" required>
-          </div>
-          <div class="col-md-4 form-group">
-            <label for="doctor">Doctor: *</label>
-            <select name="doctor" id="doctor" class="form-select" required>
-              <option value="">Select Doctor</option>
-              {% for doctor in data %}
-              <option value="{{ doctor[1] }}">{{ doctor[1] }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-md-4 form-group">
-            <label for="location">Location: *</label>
-            <select name="location" id="location" class="form-select" required>
-              <option value="">Select Location</option>
-              {% for row in data %}
-              <option value="{{ row[4] }}">{{ row[4] }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 form-group">
-            <label for="time">Appointment Time: *</label>
-            <input type="time" class="form-control" id="time" name="time" required>
-          </div>
-        </div>
-        <div class="form-group mt-3">
-          <textarea class="form-control" name="details" rows="2" placeholder="Details (Optional)"></textarea>
-        </div>
-        <br>
-        <div class="text-center">
-          <button type="submit" class="btn btn-dark">Request Appointment</button>
-        </div>
-      </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+      {{ message }}
     </div>
-  </section><!-- End Appointment Section -->
-  {% endblock %}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="section-title">
+      <h2 class="mb-3">Make an Appointment</h2>
+      <p>Ready to schedule your appointment? Use the form below to select your preferred date and time, and we'll take
+        care of the rest. We'll reach out to confirm your appointment shortly. Thank you for choosing us for your
+        healthcare needs!</p>
+    </div>
+
+    <form id="actionForm" action="/handle_appointment_request" method="post">
+      <input type="hidden" id="action" name="action" value="add">
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label for="date">Appointment Date: *</label>
+          <input type="date" class="form-control" id="date" name="date" required>
+        </div>
+        <div class="col-md-4 form-group">
+          <label for="doctor">Doctor: *</label>
+          <select name="doctor" id="doctor" class="form-select" required>
+            <option value="">Select Doctor</option>
+            {% for doctor in data %}
+            <option value="{{ doctor[1] }}">{{ doctor[1] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4 form-group">
+          <label for="location">Location: *</label>
+          <select name="location" id="location" class="form-select" required>
+            <option value="">Select Location</option>
+            {% for row in data %}
+            <option value="{{ row[4] }}">{{ row[4] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label for="time">Appointment Time: *</label>
+          <input type="time" class="form-control" id="time" name="time" required>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <textarea class="form-control" name="details" rows="2" placeholder="Details (Optional)"></textarea>
+      </div>
+      <br>
+      <div class="text-center">
+        <button type="submit" class="btn btn-dark">Request Appointment</button>
+      </div>
+    </form>
+  </div>
+</section><!-- End Appointment Section -->
+{% endblock %}

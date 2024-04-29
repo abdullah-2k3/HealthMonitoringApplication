@@ -202,7 +202,6 @@ def handle_patient_action():
     if username:
         user_data["username"] = username
     if password:
-
         user_data["password"] = password
 
     user_data["role"] = "patient"
@@ -484,7 +483,6 @@ def send_appointment_notification(doctorid, patientid, message):
 
 @action_routes.route("/post_suggestion", methods=["POST"])
 def post_suggestion():
-
     username = session["username"]
     message = request.form["message"]
     subject = request.form["subject"]
@@ -499,7 +497,6 @@ def post_suggestion():
 
 @action_routes.route("/add_patient_health_data", methods=["POST"])
 def add_patient_health_data():
-
     patientid = session["id"]
     datetime_str = request.form["datetime"]
     datetime_str = datetime_str.replace("T", " ")
@@ -518,7 +515,7 @@ def add_patient_health_data():
     if not bloodpressure:
         bloodpressure = "-"
     if not heartrate:
-        heartrate = 0
+        heartrate = "-"
     if not temprature:
         temprature = 0
     if not weight:

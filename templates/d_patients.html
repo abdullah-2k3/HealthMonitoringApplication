@@ -10,48 +10,46 @@ Patients
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ category }}">
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
 
-    <section id="doctors" class="doctors ">
-        <div class="container ">
-
-            <div class="section-title">
-                <h2>Patients</h2>
-                <p>On this page, you can view a list of all the patients who have had an appointment with you. You can
-                    browse through their profiles and see their health to help you get an idea about thier medical care.
-                </p>
-            </div>
-
-            <div class="row">
-
-                {% for i in data %}
-
-                <div class="col-lg-6">
-                    <div class="member d-flex align-items-start">
-                        <div class="pic"><img src="./static/user-logo.png" class="img-fluid" alt=""></div>
-                        <div class="member-info">
-                            <h4>{{ i[1] }}</h4> <span>{{ i[2] }}</span>
-                            <p> Age: {{ i[3] }}</p>
-                            <p>Health Status: {{ i[4] }} </p>
-                            <div class="social"> <a href=""><i class="ri-twitter-fill"></i></a> <a href=""><i
-                                        class="ri-facebook-fill"></i></a> <a href=""><i
-                                        class="ri-instagram-fill"></i></a> <a href=""> <i
-                                        class="ri-linkedin-box-fill"></i> </a> </div>
-                        </div>
-                    </div>
-                </div> {% endfor %}
-            </div>
-        </div>
-    </section>
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
 </div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<section id="doctors" class="doctors ">
+    <div class="container ">
+
+        <div class="section-title">
+            <h2>Patients</h2>
+            <p>On this page, you can view a list of all the patients who have had an appointment with you. You can
+                browse through their profiles and see their health to help you get an idea about thier medical care.
+            </p>
+        </div>
+
+        <div class="row">
+
+            {% for i in data %}
+
+            <div class="col-lg-6">
+                <div class="member d-flex align-items-start">
+                    <div class="pic"><img src="./static/user-logo.png" class="img-fluid" alt=""></div>
+                    <div class="member-info">
+                        <h4>{{ i[1] }}</h4> <span>{{ i[2] }}</span>
+                        <p> Age: {{ i[3] }}</p>
+                        <p>Health Status: {{ i[4] }} </p>
+                        <div class="social"> <a href=""><i class="ri-twitter-fill"></i></a> <a href=""><i
+                                    class="ri-facebook-fill"></i></a> <a href=""><i class="ri-instagram-fill"></i></a>
+                            <a href=""> <i class="ri-linkedin-box-fill"></i> </a> </div>
+                    </div>
+                </div>
+            </div> {% endfor %}
+        </div>
+    </div>
+</section>
+
 {% endblock %}

@@ -11,16 +11,8 @@
 
 @media only screen and (max-width: 600px) {
   .sidebar {
-    width: 150px; /* Adjust the width for smaller screens */
+    width: 20%; 
   }
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background: #ffffff ;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #150631;
 }
 
 .topbar {
@@ -28,7 +20,7 @@ body {
   top: 0;
   width: 100%;
   height: 10%;
-  background-color: #000;
+  background-color: #184672;
   color: #fff;
   display: flex;
   justify-content: space-between;
@@ -36,8 +28,7 @@ body {
   padding: 25px;
   font-size: 16px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000; 
-
+  z-index: 500;
 }
 
 .logo-container {
@@ -78,7 +69,7 @@ body {
   height:8%;
   padding: 8px 20px;
   z-index: 1000; 
-  background-color: #aaa;
+  background-color: #aecfed;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #130e3b;
   
@@ -88,18 +79,48 @@ body {
 
 .sidebar {
   position: fixed;
+  z-index: 500;
   left: 0;
-  top: 0;
   width: 200px;
   padding: 10px;
+  top: 10%;
   height: 100%;
-  top: 6%;
-  background-color: #202022;
+  max-height: 90%; 
+  overflow-y: auto; 
+  background-color: #0f2c48;
   transition: 0.3s;
   text-align: left;
   color: #fff;
 
 }
+
+
+/* Hide the scrollbar by default */
+.sidebar::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Show the scrollbar on hover and style it */
+.sidebar:hover::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+.sidebar::-webkit-scrollbar-track {
+  background: transparent; /* Make it transparent */
+}
+
+/* Handle */
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3); /* Adjust the color and opacity as needed */
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5); /* Darker color on hover */
+}
+
 
 .sidebar .closebtn {
   position: absolute;
@@ -136,9 +157,8 @@ body {
 
 .sidebar-image {
   width: 100px; 
-  margin-left: 15px; 
+  margin-left: 20px; 
   margin-bottom: 3px;
-  margin-top:14%;
 }
   
 .sidebar-label {
@@ -161,7 +181,7 @@ button {
   width: 100%;
   padding: 15px 0px;
   margin-bottom: 10px;
-  background-color: #202020;
+  background-color: #0f2c48;
   color: white;
   border: none;
   border-radius: 5px;
@@ -169,7 +189,7 @@ button {
 }
 
 button:hover {
-  background-color: #111111;
+  background-color: #0b2135;
 }
 
 .main-content {
@@ -178,6 +198,8 @@ button:hover {
   margin-right: 20px;
   margin-top: 150px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e7ecf0;
+  transition: margin-left .3s;
 }
 
 table td, table th {
@@ -249,4 +271,15 @@ table {
   font-size: 0.75rem;
   padding: 0 0.25rem;
   border-radius: 50%;
+}
+
+
+
+.chart {
+  width: 200px;
+  height: 100px;
+  background-color:#aecfed;
+  color: #202040;
+  margin-bottom: 10px;
+  border-radius: 10px;
 }

@@ -5,6 +5,7 @@ from socket_events import socketio
 from flask import jsonify
 import json
 
+
 app = Flask(__name__)
 app.secret_key = "hello"
 
@@ -65,10 +66,9 @@ def dashboard():
 
         if role == "patient":
             id = session["id"]
-            query = f"SELECT TOP 1 * FROM patienthealth WHERE patient_id = {id} ORDER BY record_id DESC"
+            query = f"SELECT * FROM patienthealth WHERE patient_id = {id} ORDER BY record_id DESC"
             data, cols = crud.execute_fetch_query(query)
-            if len(data) == 0:
-                data = (1, 2)
+
             return render_template("p_dashboard.html", data=data)
 
         elif role == "doctor":
@@ -99,6 +99,36 @@ def dashboard():
             }
 
             return render_template("a_dashboard.html", data=data)
+    flash("Please login to access this page", "error")
+    return redirect(url_for("login"))
+
+
+@app.route("/health_visualization")
+def health_visualization():
+    if "username" in session and "role" in session:
+        id = session["id"]
+        query = f"SELECT * FROM patienthealth WHERE patient_id = {id} ORDER BY record_id DESC"
+        data, cols = crud.execute_fetch_query(query)
+
+        weight = [row[6] for row in data]
+        height = [row[7] for row in data]
+        bp = [row[3] for row in data]
+        heart_rate = [row[4] for row in data]
+        sleeptime = [row[13] for row in data]
+        temp = [row[5] for row in data]
+        datetime = [row[2] for row in data]
+
+        chart_data = {
+            "height": height,
+            "weight": weight,
+            "bloodpressure": bp,
+            "heartrate": heart_rate,
+            "datetime": datetime,
+            "temprature": temp,
+            "sleeptime": sleeptime,
+        }
+        return render_template("p_visualization.html", chart_data=chart_data)
+
     flash("Please login to access this page", "error")
     return redirect(url_for("login"))
 

@@ -12,47 +12,44 @@ Notifications
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ category }}">
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <section class="container">
-        <div class=" section-title ">
-            <h2>Notifications</h2>
-        </div>
-        {%if data%}
-        {% for i in data%}
-
-        <div class="row mb-4 rounded " style="background: #ddddde;">
-            <div class="panel-body d-flex justify-content-between align-items-center">
-                <p class="ml-2 mt-3" style="color:rgb(95, 110, 160);">{{ i[2] }}</p>
-                {% if role == "doctor" and "appointment request" in i[2] %}
-                <div class="d-flex">
-                    <form id="confirm-appointment-form" action="/appointment" method="post">
-                        <input type="hidden" name="notificationid" value="{{ i[0] }}">
-                        <button type="submit" class="btn btn-dark">View</button>
-                    </form>
-                </div>
-                {%endif%}
-            </div>
-        </div>
-
-
-
-
-        {%endfor%}
-        {%else%}
-        <h3 style="background-color:azure   ;">You have no new Notifications :)</h3>
-        {%endif%}
-    </section>
-
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
 </div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<section class="container">
+    <div class=" section-title ">
+        <h2>Notifications</h2>
+    </div>
+    {%if data%}
+    {% for i in data%}
+
+    <div class="row mb-4 rounded " style="background: #ddddde;">
+        <div class="panel-body d-flex justify-content-between align-items-center">
+            <p class="ml-2 mt-3" style="color:rgb(95, 110, 160);">{{ i[2] }}</p>
+            {% if role == "doctor" and "appointment request" in i[2] %}
+            <div class="d-flex">
+                <form id="confirm-appointment-form" action="/appointment" method="post">
+                    <input type="hidden" name="notificationid" value="{{ i[0] }}">
+                    <button type="submit" class="btn btn-dark">View</button>
+                </form>
+            </div>
+            {%endif%}
+        </div>
+    </div>
+
+
+
+
+    {%endfor%}
+    {%else%}
+    <h3 style="background-color:azure   ;">You have no new Notifications :)</h3>
+    {%endif%}
+</section>
+
 {% endblock %}

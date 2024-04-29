@@ -83,110 +83,115 @@
 
 
         {%if role == "patient"%}
-        <button onclick="loadPage('p_dashboard.html', 'Dashboard', '/dashboard')">
+        <button onclick="loadPage('/dashboard')">
             <i class="fas fa-tachometer-alt"></i>
             Dashboard
         </button>
 
-        <button onclick="loadPage('p_profile.html', 'Profile', '/profile')">
+        <button onclick="loadPage('/profile')">
             <i class="fas fa-user"></i>
             Profile
         </button>
 
-        <button onclick="loadPage('p_health_records.html', 'p_health_records', '/health_records')">
+        <button onclick="loadPage('/health_records')">
             <i class="fas fa-file-alt"></i>
             Health Records
         </button>
 
-        <button onclick="loadPage('p_doctors.html', 'Doctors', '/doctors')">
+        <button onclick="loadPage('/health_visualization')">
+            <i class="fas fa-file-alt"></i>
+            Visualization
+        </button>
+
+        <button onclick="loadPage('/doctors')">
             <i class="fas fa-user-md"></i>
             Doctors
         </button>
 
-        <button onclick="loadPage('p_viewappointments.html', 'View Appointments', '/viewappointments')">
+        <button onclick="loadPage('/viewappointments')">
             <i class="fas fa-calendar-check"></i>
             View Appointments
         </button>
 
-        <button onclick="loadPage('p_appointment.html', 'Appointment', '/appointment')">
+        <button onclick="loadPage('/appointment')">
             <i class="fas fa-calendar-plus"></i>
             Request Appointment
         </button>
 
-        <button onclick="loadPage('resources.html', 'Resources', '/resources')">
+        <button onclick="loadPage('/resources')">
             <i class="fas fa-file-medical-alt"></i>
             Resources
         </button>
 
-        <button onclick="loadPage('faq.html', 'FAQs', '/faq')">
+        <button onclick="loadPage('/faq')">
             <i class="fas fa-question-circle"></i>
             FAQs
         </button>
 
-        <button onclick="loadPage('chat.html', 'chat', '/chat')">
+        <button onclick="loadPage('/chat')">
             <i class="fas fa-comments"></i>
             Chat
         </button>
 
         {%elif role == "doctor" %}
-        <button onclick="loadPage('d_dashboard.html', 'Dashboard', '/dashboard')">
+        <button onclick="loadPage('/dashboard')">
             <i class="fas fa-tachometer-alt"></i>
             Dashboard
         </button>
 
-        <button onclick="loadPage('d_profile.html', 'Profile', '/profile')">
+        <button onclick="loadPage('/profile')">
             <i class="fas fa-user"></i>
             Profile
         </button>
 
-        <button onclick="loadPage('d_patients.html', 'Patients', '/patients')">
+        <button onclick="loadPage('/patients')">
             <i class="fas fa-user-md"></i>
             Patients
         </button>
 
-        <button onclick="loadPage('d_appointment.html', 'Appointment', '/appointment')">
+        <button onclick="loadPage('/appointment')">
             <i class="fas fa-calendar-plus"></i>
             Appointments
         </button>
 
-        <button onclick="loadPage('suggestions.html', 'Suggestions', '/suggestions')">
+        <button onclick="loadPage('/suggestions')">
             <i class="fas fa-file-medical-alt"></i>
             Suggestions
         </button>
 
 
-        <button onclick="loadPage('chat.html', 'chat', '/chat')">
+        <button onclick="loadPage('/chat')">
             <i class="fas fa-comments"></i>
             Chat
         </button>
 
         {%elif role == "admin" %}
-        <button onclick="loadPage('a_dashboard.html', 'Dashboard', '/dashboard')">
+        <button onclick="loadPage('/dashboard')">
             <i class="fas fa-tachometer-alt"></i>
             Dashboard
         </button>
 
-        <button onclick="loadPage('a_profile.html', 'Profile', '/profile')">
+        <button onclick="loadPage('/profile')">
             <i class="fas fa-user"></i>
             Profile
         </button>
 
-        <button onclick="loadPage('a_doctors.html', 'Doctors', '/doctors')">
+        <button onclick="loadPage('/doctors')">
             <i class="fas fa-user-md"></i>
             Doctors
         </button>
 
-        <button onclick="loadPage('a_patients.html', 'Patients', '/patients')">
+        <button onclick="loadPage('/patients')">
             <i class="fas fa-user-md"></i>
             Patients
         </button>
 
-        <button onclick="loadPage('a_users.html', 'Users', '/users')">
+        <button onclick="loadPage('/users')">
             <i class="fas fa-user"></i>
             Users
         </button>
 
-        <button onclick="loadPage('a_appointment.html', 'Appointment', '/appointment')">
+        <button onclick="loadPage('/appointment')">
             <i class="fas fa-calendar-plus"></i>
             Appointments
         </button>
@@ -198,10 +203,13 @@
         <h2>{%block header%}{% endblock %}</h2>
     </div>
 
-    <div id="main-content">
+
+    <div id="main-content" class="main-content">
         {% block content %}
         {% endblock %}
     </div>
+
+
 
     <script src="./static/script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
