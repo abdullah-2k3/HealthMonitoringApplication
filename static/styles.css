@@ -1,8 +1,45 @@
+
 @media (max-width: 768px) {
-  #sidebar {
-      display: none;
+  .topbar {
+    width:100%;
+    height: 30px; 
+   }
+  
+  .logo-container {
+    margin-left: 10px; 
+  }
+
+  .topbar-image {
+    width: 20px; 
+  }
+
+  .logout-button a {
+    padding: 5px 8px;
+    font-size: 14px; 
+  }
+
+  .my_header {
+    top: 60px; /* Adjust top position for mobile */
+    height: 50px; /* Adjust height for mobile */
+    padding: 5px 10px; /* Adjust padding for mobile */
+    font-size: 14px; /* Adjust font size for mobile */
+  }
+
+  .sidebar {
+    width: 60px; /* Adjust width for mobile */
+    padding: 5px; /* Adjust padding for mobile */
+  }
+
+  #main {
+    margin-left: 60px; /* Adjust margin for mobile */
+  }
+
+  .main-content {
+    margin-left: 70px; /* Adjust margin for mobile */
+    margin-top: 80px; /* Adjust margin for mobile */
   }
 }
+
 
 @media screen and (max-height: 450px) {
   .sidebar {padding-top: 15px;}

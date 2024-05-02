@@ -66,9 +66,10 @@ def dashboard():
 
         if role == "patient":
             id = session["id"]
-            query = f"SELECT * FROM patienthealth WHERE patient_id = {id} ORDER BY record_id DESC"
+            query = f"SELECT * FROM patienthealth WHERE patient_id = {id} ORDER BY date_time"
             data, cols = crud.execute_fetch_query(query)
-
+            if not data:
+                data = [0, 0]
             return render_template("p_dashboard.html", data=data)
 
         elif role == "doctor":
@@ -236,6 +237,17 @@ def patients():
             return render_template(
                 "a_patients.html", data=patients_data, columns=columns
             )
+
+    flash("Please login to access this page", "error")
+    return redirect(url_for("login"))
+
+
+@app.route("/admins")
+def admins():
+    if "username" in session and "role" in session:
+        query = "Select * from users Where role = 'admin'"
+        admins_data, columns = crud.execute_fetch_query(query)
+        return render_template("a_admins.html", data=admins_data, columns=columns)
 
     flash("Please login to access this page", "error")
     return redirect(url_for("login"))

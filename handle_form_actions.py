@@ -341,6 +341,62 @@ def handle_doctor_action():
     return redirect("/doctors")
 
 
+@action_routes.route("/handle_admin_action", methods=["POST"])
+def handle_admin_action():
+
+    action = request.form.get("action")
+
+    username = request.form.get("username")
+    password = request.form.get("password")
+    email = request.form.get("email")
+    contact = request.form.get("contact")
+
+    user_data = {}
+
+    if username:
+        user_data["username"] = username
+    if password:
+        user_data["password"] = password
+
+    user_data["role"] = "admin"
+
+    if email:
+        user_data["email"] = email
+    if contact:
+        user_data["contact"] = contact
+
+    if action == "add":
+        if not (username and password and email and contact):
+            flash("Please fill in all fields.", "error")
+            return redirect("/admins")
+        crud.add_row("users", user_data)
+        flash("Admin has been added", "success")
+
+    elif action == "update":
+        id = request.form.get("id")
+        if not id:
+            flash("Enter ID.", "error")
+        elif crud.get_user_role(id) != "admin":
+            flash("Wrong ID", "warning")
+        else:
+            user_data["role"] = None
+            crud.update_row("users", user_data, id)
+
+    elif action == "delete":
+        id = request.form.get("id")
+        if not id:
+            flash("Enter ID.", "error")
+        elif crud.get_user_role(id) != "admin":
+            flash("Wrong ID", "warning")
+        else:
+            if crud.delete_row("users", id):
+                flash("Admin has been removed", "warning")
+            else:
+                flash("Could not remove Admin", "warning")
+
+    return redirect("/admins")
+
+
 @action_routes.route("/reset_notification_count", methods=["POST"])
 def reset_notification_count():
     crud.update_notification_status(session["id"])

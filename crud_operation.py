@@ -41,7 +41,7 @@ def fetch_data_with_query(table_name, row_id, _="id"):
 
 
 def get_doctor_patients(id):
-    query = f"SELECT * FROM patients where id in (select patientid from appointments where doctorid = ?)"
+    query = f"SELECT DISTINCT * FROM patients where id in (select patientid from appointments where doctorid = ?)"
     return execute_fetch_query(query, (id,))
 
 
@@ -104,8 +104,7 @@ def update_row(table_name, row_data, row_id, _="id"):
         if result:
             flash(f"{columns} updated", "success")
             return True
-        else:
-            flash("ID not found", "warning")
+
     except (pyodbc.Error, ValueError) as e:
         print(f"Error updating row: {e}")
         return False

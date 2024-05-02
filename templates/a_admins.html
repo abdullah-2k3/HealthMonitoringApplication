@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admins
+{% endblock %}
+
+
+{% block header %}
+Manage Admins
+{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<section class="section-bg p-4 rounded shadow mb-4">
+    <h2 class="mb-3">Admin Records</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                {% for column in columns %}
+                <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                {% for value in row %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="section-bg p-4 rounded shadow mb-4">
+    <h2>Database Operations</h2>
+
+    <p style="padding: 10px">The operations will be performed in the database. If the user is not registered or does
+        not exist in the
+        database, 'Add' operation will register the user and save all the details in the database.</p>
+
+    <form id="actionForm" action="/handle_admin_action" method="post" style="margin-bottom: 30px; margin-top: 30px;">
+        <div class="row">
+            <input type="hidden" id="action" name="action" value="">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="password">
+                        Password:
+                        <input type="checkbox" onclick="showPassword()">
+                        <span>Show</span>
+                    </label>
+                    <input type="password" id="password" name="password" class="form-control">
+                </div>
+            </div>
+            <!-- Removed the entire column for the "User ID" field -->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="admin_name">Admin Name:</label>
+                    <input type="text" id="admin_name" name="admin_name" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="contact">Contact:</label>
+                    <input type="text" id="contact" name="contact" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="id">ID:</label>
+                    <input type="text" id="id" name="id" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary mr-3" onclick="setAction('add')">Add Admin</button>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-success mr-3" onclick="setAction('update')">Update Admin</button>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger mr-3" onclick="setAction('delete')">Delete Admin</button>
+        </div>
+    </form>
+
+</section>
+
+{% endblock %}

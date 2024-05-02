@@ -37,7 +37,7 @@ Data Visualization
         <canvas class="chart" id="temprature_chart" style="width: 200px; height: 100px;"></canvas>
     </div>
     <div class="col-lg-6">
-        <h4>Blood Pressure</h4>
+        <h4>Heart Rate</h4>
         <canvas class="chart" id="heartrate_chart" style="width: 200px; height: 100px;"></canvas>
     </div>
 </div>
@@ -174,7 +174,7 @@ Data Visualization
                         },
                         ticks: {
                             min: 70,
-                            max: Math.ceil(Math.max(...temprature)), // Set maximum value
+                            max: 110, // Set maximum value
                             stepSize: 1 // Set the step size to 1
                         }
                     }
@@ -220,7 +220,7 @@ Data Visualization
                         },
                         ticks: {
                             min: 50,
-                            max: Math.ceil(Math.max(...heartrate)), // Set maximum value
+                            max: 100, // Set maximum value
                             stepSize: 1 // Set the step size to 1
                         }
                     }]
