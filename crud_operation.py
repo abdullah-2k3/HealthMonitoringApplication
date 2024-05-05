@@ -67,7 +67,7 @@ def execute_query(query, params=None):
 
 def add_row(table_name, row_data):
     try:
-        columns = ", ".join(row_data.keys())
+        # columns = ", ".join(row_data.keys())
         placeholders = ", ".join(["?"] * len(row_data))
         insert_query = f"INSERT INTO {table_name} VALUES ({placeholders})"
 

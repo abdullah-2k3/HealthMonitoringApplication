@@ -1,6 +1,7 @@
-from flask import redirect, request, session, flash, Blueprint
+from flask import redirect, request, session, flash, Blueprint, jsonify
 import crud_operation as crud
 from datetime import datetime, timedelta
+
 
 action_routes = Blueprint("routes", __name__)
 
@@ -181,6 +182,23 @@ def handle_appointment_update():
     crud.update_row("appointments", appointment_data, appointment_id, "AppointmentID")
 
     return redirect("/appointment")
+
+
+@action_routes.route("/get_locations", methods=["GET"])
+def get_locations():
+    doctor_id = request.args.get("doctor")
+    if doctor_id:
+        query = f"SELECT location FROM doctors where id = ?"
+        locations, cols = crud.execute_fetch_query(query, doctor_id)
+        locations = locations[0][0].split(
+            ","
+        )  # a list of tuple is returned with all the locations in a string
+        # we split the individual locations to make a proper list
+
+        if locations:
+            return jsonify({"locations": locations})
+
+    return jsonify({"locations": []})
 
 
 @action_routes.route("/handle_patient_action", methods=["POST"])

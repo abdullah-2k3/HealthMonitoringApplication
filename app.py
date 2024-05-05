@@ -78,7 +78,7 @@ def dashboard():
                 "appointments", session["id"], "doctorid"
             )
             doctor, col = crud.fetch_data_with_query("doctors", session["id"])
-            locations = doctor[0][4].split()
+            locations = doctor[0][4].split(",")
             data = {
                 "patients": len(patients),
                 "appointments": len(appointments),
