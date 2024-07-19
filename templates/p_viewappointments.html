@@ -33,6 +33,7 @@ View Appointments
         details, you can reach out the admin.</p>
     </div>
 
+    {% if data %}
     {% for i in data %}
     {% if i[8] != "canceled" and i[8] != 'not confirmed'%}
     <div class="row mb-5">
@@ -71,6 +72,9 @@ View Appointments
     </div>
     {%endif%}
     {% endfor %}
+    {% else %}
+    No appointments
+    {%endif%}
   </div>
 </section>
 

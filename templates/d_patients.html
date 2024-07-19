@@ -33,6 +33,8 @@ Patients
 
         <div class="row">
 
+            {% if data %}
+
             {% for i in data %}
 
             <div class="col-lg-6">
@@ -44,10 +46,13 @@ Patients
                         <p>Health Status: {{ i[4] }} </p>
                         <div class="social"> <a href=""><i class="ri-twitter-fill"></i></a> <a href=""><i
                                     class="ri-facebook-fill"></i></a> <a href=""><i class="ri-instagram-fill"></i></a>
-                            <a href=""> <i class="ri-linkedin-box-fill"></i> </a> </div>
+                            <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                        </div>
                     </div>
                 </div>
             </div> {% endfor %}
+
+            {% endif %}
         </div>
     </div>
 </section>

@@ -30,7 +30,7 @@ Appointments
         </div>
 
         <div class="row">
-
+            {% if data %}
             {% for i in data %}
             {% if i[8] != "canceled"%}
             <div class="member d-flex align-items-start">
@@ -72,6 +72,9 @@ Appointments
             </div>
             {% endif %}
             {% endfor %}
+            {% else %}
+            <h2 class="text-center mt-4">No appointments yet</h2>
+            {% endif %}
         </div>
     </div>
 </section>

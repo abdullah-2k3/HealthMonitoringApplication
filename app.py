@@ -79,11 +79,24 @@ def dashboard():
             )
             doctor, col = crud.fetch_data_with_query("doctors", session["id"])
             locations = doctor[0][4].split(",")
-            data = {
-                "patients": len(patients),
-                "appointments": len(appointments),
-                "locations": len(locations),
-            }
+
+            data = {}
+
+            if patients:
+                data["patients"] = len(patients)
+            else:
+                data["patients"] = 0
+
+            if appointments:
+                data["appointments"] = len(appointments)
+            else:
+                data["appointments"] = 0
+
+            if locations:
+                data["locations"] = len(locations)
+            else:
+                data["locations"] = 0
+
             return render_template("d_dashboard.html", data=data)
 
         elif role == "admin":

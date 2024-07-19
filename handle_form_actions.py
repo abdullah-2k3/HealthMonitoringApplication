@@ -91,16 +91,11 @@ def handle_register_doctor():
 def handle_appointment_request():
 
     patient_id = int(session["id"])
-    doctor = request.form["doctor"]
+    doctor_id = request.form["doctor"]
     location = request.form["location"]
     date = request.form["date"]
     time = request.form["time"]
     details = request.form["details"]
-
-    doctor_id = crud.get_id("doctors", "name", doctor)
-    if not doctor_id:
-        flash("Doctor not found.", "error")
-        return redirect("/appointment")
 
     date = str(datetime.strptime(date, "%Y-%m-%d").date())
     time = str(datetime.strptime(time, "%H:%M").time())

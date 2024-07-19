@@ -1,11 +1,13 @@
 from flask import flash
-import pyodbc
 
-conn_str = "Driver={SQL Server};Server=DESKTOP-5REV9KP\SQLEXPRESS;Database=HealthMonitoringSystem"
+import sqlite3
+
+DATABASE = "health_monitoring_system.db"
+
+conn = sqlite3.connect(DATABASE, check_same_thread=False, timeout=10)
 
 
 def execute_fetch_query(query, params=None):
-    conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
     try:
@@ -22,12 +24,11 @@ def execute_fetch_query(query, params=None):
         columns = [column[0] for column in cursor.description]
 
         return table_data, columns
-    except pyodbc.Error as e:
+    except sqlite3.Error as e:
         print(f"Error executing query: {e}")
         return None, None
     finally:
         cursor.close()
-        conn.close()
 
 
 def fetch_data_from_table(table_name):
@@ -46,7 +47,6 @@ def get_doctor_patients(id):
 
 
 def execute_query(query, params=None):
-    conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
     try:
@@ -57,24 +57,23 @@ def execute_query(query, params=None):
 
         conn.commit()
         return True
-    except pyodbc.Error as e:
+    except sqlite3.Error as e:
         flash(f"Error executing query: {e}")
         return False
     finally:
         cursor.close()
-        conn.close()
 
 
 def add_row(table_name, row_data):
     try:
-        # columns = ", ".join(row_data.keys())
+        columns = ", ".join(row_data.keys())
         placeholders = ", ".join(["?"] * len(row_data))
-        insert_query = f"INSERT INTO {table_name} VALUES ({placeholders})"
+        insert_query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
 
         values = [v if v is not None else "" for v in row_data.values()]
 
         return execute_query(insert_query, tuple(values))
-    except pyodbc.Error as e:
+    except sqlite3.Error as e:
         print(f"Error adding row: {e}")
         return False
 
@@ -105,7 +104,7 @@ def update_row(table_name, row_data, row_id, _="id"):
             flash(f"{columns} updated", "success")
             return True
 
-    except (pyodbc.Error, ValueError) as e:
+    except (sqlite3.Error, ValueError) as e:
         print(f"Error updating row: {e}")
         return False
 
@@ -119,7 +118,7 @@ def delete_row(table_name, row_id, _="id"):
             return True
         else:
             return False
-    except pyodbc.Error as e:
+    except sqlite3.Error as e:
         flash(f"Error deleting row: {e}")
         return False
 
@@ -132,13 +131,13 @@ def authenticate_user(username, password):
 
 def get_user_role(id):
     try:
-        conn = pyodbc.connect(conn_str)
+
         cursor = conn.cursor()
         query = "SELECT role FROM users WHERE id = ?"
         cursor.execute(query, (id))
         role = str(cursor.fetchone()[0])
         cursor.close()
-        conn.close()
+
         return role if role else None
     except Exception as e:
         flash("No record found", "warning")
@@ -147,13 +146,13 @@ def get_user_role(id):
 
 def get_id(table, column, name):
     try:
-        conn = pyodbc.connect(conn_str)
+
         cursor = conn.cursor()
         query = f"SELECT id FROM {table} WHERE {column} = ?"
         cursor.execute(query, (name,))
         result = cursor.fetchone()
         cursor.close()
-        conn.close()
+
         return int(result[0]) if result else None
     except Exception as e:
         print("Error:", e)
@@ -161,7 +160,6 @@ def get_id(table, column, name):
 
 
 def is_user_registered(id, role):
-    conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
 
     try:
@@ -176,20 +174,20 @@ def is_user_registered(id, role):
             )
             return False
 
-    except pyodbc.Error as e:
+    except sqlite3.Error as e:
         print(f"Error adding row: {e}")
         flash("An error occurred while adding the row.", "error")
     finally:
         cursor.close()
-        conn.close()
+
         return True
 
 
 def update_notification_status(user_id):
     try:
-        query = "UPDATE notifications SET status = 'Viewed' WHERE userid = ? AND status = 'New'"
+        query = "UPDATE notifications SET status = 'Viewed' WHERE user_id = ? AND status = 'New'"
         return execute_query(query, (user_id,))
 
-    except pyodbc.Error as e:
+    except sqlite3.Error as e:
         print(f"Error updating notification status: {e}")
         return False
